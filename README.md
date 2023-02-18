@@ -8,7 +8,7 @@
 ### [2. 플러그인 설명](#플러그인-설명)
 ### [3. 제작 의도](#제작-의도)
 ### [4. 안내](#안내)
-### [5. Contact Mail](#Contact-Email)
+### [5. Contact Email](#Contact-Email)
 
 ## 소개
 #### PoisonousMushroom 플러그인입니다. Minecraft Spigot, Paper 버킷 1.19.3 버전에서 사용이 가능합니다.
