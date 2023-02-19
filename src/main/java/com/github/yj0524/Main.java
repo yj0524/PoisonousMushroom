@@ -180,6 +180,14 @@ public class Main extends JavaPlugin implements Listener {
                     for (String entry : spectatorTeam.getEntries()) {
                         Player player1 = Bukkit.getPlayer(entry);
                         if (player1 != null) {
+                            // 만일 Spectator 모드에서 지면 위로 올라오지 않았거나 지면보다 높다면 제일 가까운 땅으로 이동
+                            Location playerLocation = player1.getLocation();
+                            Location groundLocation = playerLocation.clone().add(0, -1, 0);
+                            if (playerLocation.getY() > groundLocation.getY()) {
+                                player1.teleport(groundLocation);
+                                player1.setGameMode(GameMode.SURVIVAL);
+                                peopleTeam.addEntry(player1.getName());
+                            }
                             player1.setGameMode(GameMode.SURVIVAL);
                             peopleTeam.addEntry(player1.getName());
                         }
@@ -193,6 +201,14 @@ public class Main extends JavaPlugin implements Listener {
                     for (String entry : spectatorTeam.getEntries()) {
                         Player player1 = Bukkit.getPlayer(entry);
                         if (player1 != null) {
+                            // 만일 Spectator 모드에서 지면 위로 올라오지 않았거나 지면보다 높다면 제일 가까운 땅으로 이동
+                            Location playerLocation = player1.getLocation();
+                            Location groundLocation = playerLocation.clone().add(0, -1, 0);
+                            if (playerLocation.getY() > groundLocation.getY()) {
+                                player1.teleport(groundLocation);
+                                player1.setGameMode(GameMode.SURVIVAL);
+                                peopleTeam.addEntry(player1.getName());
+                            }
                             player1.setGameMode(GameMode.SURVIVAL);
                             peopleTeam.addEntry(player1.getName());
                         }
