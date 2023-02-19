@@ -30,6 +30,8 @@ public class Main extends JavaPlugin implements Listener {
     int huskHealth;
     int huskCount;
     String mushroomPlayerName;
+    boolean serverAutoShutDown;
+    int serverShutDownTick;
 
     @Override
     public void onEnable() {
@@ -90,10 +92,14 @@ public class Main extends JavaPlugin implements Listener {
         huskHealth = config.getInt("huskHealth", 20);
         huskCount = config.getInt("huskCount", 10);
         mushroomPlayerName = config.getString("mushroomPlayerName", "yj0524_kr");
+        serverAutoShutDown = config.getBoolean("serverAutoShutDown", false);
+        serverShutDownTick = config.getInt("serverShutDownTick", 600);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount",huskCount);
         config.set("mushroomPlayerName", mushroomPlayerName);
+        config.set("serverAutoShutDown", serverAutoShutDown);
+        config.set("serverShutDownTick", serverShutDownTick);
         saveConfig();
     }
 
@@ -162,6 +168,37 @@ public class Main extends JavaPlugin implements Listener {
             // 죽은 플레이어를 Spectator로 설정하고 Spectator 팀에 추가
             player.setGameMode(GameMode.SPECTATOR);
             scoreboard.getTeam("Spectator").addEntry(player.getName());
+        }
+
+        // People 팀의 인원이 0명일 때
+        if (peopleTeam.getEntries().size() == 0) {
+            for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                if (serverAutoShutDown) {
+                    // serverAutoShutDown이 true일 경우
+                    allplayers.sendTitle("§c게임 종료", "§c모든 사람이 죽었습니다. §a" + (serverShutDownTick / 20) + "§a초 후에 서버가 종료됩니다.");
+                    // Spectator 팀을 People 팀으로 모두 Join
+                    for (String entry : spectatorTeam.getEntries()) {
+                        Player player1 = Bukkit.getPlayer(entry);
+                        if (player1 != null) {
+                            player1.setGameMode(GameMode.SURVIVAL);
+                            peopleTeam.addEntry(player1.getName());
+                        }
+                    }
+                    // serverShutDownTick 틱 후에 서버 종료
+                    Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick);
+                } else {
+                    // serverAutoShutDown이 false일 경우
+                    allplayers.sendTitle("§c게임 종료", "§c모든 사람이 죽었습니다.");
+                    // Spectator 팀을 People 팀으로 모두 Join
+                    for (String entry : spectatorTeam.getEntries()) {
+                        Player player1 = Bukkit.getPlayer(entry);
+                        if (player1 != null) {
+                            player1.setGameMode(GameMode.SURVIVAL);
+                            peopleTeam.addEntry(player1.getName());
+                        }
+                    }
+                }
+            }
         }
     }
 }
