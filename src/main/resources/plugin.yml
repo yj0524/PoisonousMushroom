@@ -2,3 +2,5 @@ name: PoisonousMushroom
 version: '${project.version}'
 main: com.github.yj0524.Main
 api-version: 1.19
+commands:
+  vaccine:

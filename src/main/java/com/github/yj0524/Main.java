@@ -2,6 +2,8 @@ package com.github.yj0524;
 
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Husk;
@@ -9,7 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -36,6 +43,19 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getLogger().info("Plugin Enabled");
+
+        // 포자 퇴치기 조합법 생성
+        ItemStack item = new ItemStack(Material.TOTEM_OF_UNDYING);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§c포자 퇴치기");
+        item.setItemMeta(meta);
+        NamespacedKey key = new NamespacedKey(this, "poison");
+        ShapedRecipe recipe = new ShapedRecipe(key, item);
+        recipe.shape(" T ", " N ", " E ");
+        recipe.setIngredient('T', Material.TRIDENT);
+        recipe.setIngredient('N', Material.NETHER_STAR);
+        recipe.setIngredient('E', Material.ENCHANTED_GOLDEN_APPLE);
+        Bukkit.addRecipe(recipe);
 
         getServer().getPluginManager().registerEvents(this, this);
 
@@ -216,5 +236,102 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }
         }
+    }
+
+    // 위 onEnable()에서 생성한 조합법으로 만든 아이템을 우클릭했을 때 게임 종료
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item != null && item.getType() == Material.TOTEM_OF_UNDYING) {
+            if (item.getItemMeta().getDisplayName().equals("§c포자 퇴치기")) {
+                // 사용 후, 아이템 삭제
+                player.getInventory().setItemInMainHand(null);
+
+                // 게임 종료
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    if (serverAutoShutDown) {
+                        // serverAutoShutDown이 true일 경우
+                        allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다. §a" + (serverShutDownTick / 20) + "§a초 후에 서버가 종료됩니다.");
+                        // Mushroom 팀을 Spectator 팀으로 모두 Join
+                        for (String entry : mushroomTeam.getEntries()) {
+                            Player player1 = Bukkit.getPlayer(entry);
+                            if (player1 != null) {
+                                player1.setGameMode(GameMode.SPECTATOR);
+                                spectatorTeam.addEntry(player1.getName());
+                            }
+                        }
+                        // "버섯이 소멸했습니다!" 라는 메시지를 모두에게 출력
+                        for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                            allplayers1.sendMessage("§c버섯이 소멸했습니다!");
+                        }
+                        // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
+                        Bukkit.getScheduler().runTaskLater(this, () -> {
+                            // People 팀을 Spectator 팀으로 모두 Join
+                            for (String entry : peopleTeam.getEntries()) {
+                                Player player1 = Bukkit.getPlayer(entry);
+                                if (player1 != null) {
+                                    player1.setGameMode(GameMode.SPECTATOR);
+                                    spectatorTeam.addEntry(player1.getName());
+                                }
+                            }
+                            for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                            }
+                        }, 200);
+                        // serverShutDownTick 틱 후에 서버 종료
+                        Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
+                    } else {
+                        // serverAutoShutDown이 false일 경우
+                        allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다.");
+                        // Mushroom 팀을 Spectator 팀으로 모두 Join
+                        for (String entry : mushroomTeam.getEntries()) {
+                            Player player1 = Bukkit.getPlayer(entry);
+                            if (player1 != null) {
+                                player1.setGameMode(GameMode.SPECTATOR);
+                                spectatorTeam.addEntry(player1.getName());
+                            }
+                        }
+                        // "버섯이 소멸했습니다!" 라는 메시지를 모두에게 출력
+                        for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                            allplayers1.sendMessage("§c버섯이 소멸했습니다!");
+                        }
+                        // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
+                        Bukkit.getScheduler().runTaskLater(this, () -> {
+                            // People 팀을 Spectator 팀으로 모두 Join
+                            for (String entry : peopleTeam.getEntries()) {
+                                Player player1 = Bukkit.getPlayer(entry);
+                                if (player1 != null) {
+                                    player1.setGameMode(GameMode.SPECTATOR);
+                                    spectatorTeam.addEntry(player1.getName());
+                                }
+                            }
+                            for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                            }
+                        }, 200);
+                    }
+                }
+            }
+        }
+    }
+
+    // /vaccine 명령어를 입력했을 때, 포자 퇴치기 지급
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equals("vaccine")) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                if (player.isOp()) {
+                    ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
+                    ItemMeta totemMeta = totem.getItemMeta();
+                    totemMeta.setDisplayName("§c포자 퇴치기");
+                    totem.setItemMeta(totemMeta);
+                    player.getInventory().addItem(totem);
+                    player.sendMessage("§a포자 퇴치기를 지급했습니다.");
+                }
+            }
+        }
+        return true;
     }
 }
