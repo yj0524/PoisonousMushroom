@@ -50,10 +50,12 @@ public class Main extends JavaPlugin implements Listener {
         item.setItemMeta(meta);
         NamespacedKey key = new NamespacedKey(this, "poison");
         ShapedRecipe recipe = new ShapedRecipe(key, item);
-        recipe.shape(" T ", " N ", " E ");
+        recipe.shape(" T ", "AMC", " N ");
         recipe.setIngredient('T', Material.TRIDENT);
+        recipe.setIngredient('A', Material.ENCHANTED_GOLDEN_APPLE);
+        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
+        recipe.setIngredient('C', Material.GOLDEN_CARROT);
         recipe.setIngredient('N', Material.NETHER_STAR);
-        recipe.setIngredient('E', Material.ENCHANTED_GOLDEN_APPLE);
         Bukkit.addRecipe(recipe);
 
         getServer().getPluginManager().registerEvents(this, this);
