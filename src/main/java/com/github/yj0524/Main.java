@@ -52,9 +52,9 @@ public class Main extends JavaPlugin implements Listener {
         ShapedRecipe recipe = new ShapedRecipe(key, item);
         recipe.shape(" T ", "AMC", " N ");
         recipe.setIngredient('T', Material.TRIDENT);
-        recipe.setIngredient('A', Material.ENCHANTED_GOLDEN_APPLE);
-        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
-        recipe.setIngredient('C', Material.GOLDEN_CARROT);
+        recipe.setIngredient('A', Material.APPLE);
+        recipe.setIngredient('M', Material.MELON_SLICE);
+        recipe.setIngredient('C', Material.CARROT);
         recipe.setIngredient('N', Material.NETHER_STAR);
         Bukkit.addRecipe(recipe);
 
