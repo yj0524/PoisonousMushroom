@@ -32,9 +32,6 @@
 [ 없음 ] [ 마법이 부여된 황금 사과 ] [ 없음 ]
 ```
 
-## 제작 의도
-#### 독버섯이 사람들을 무자비하게 패고 다니는 모습을 연출하기 위한 플러그인입니다.
-
 ## 안내
 #### 이 플러그인은 [GNU General Public License v3.0 라이선스](https://www.gnu.org/licenses/gpl-3.0.html)를 사용하며, **플러그인을 수정하여 사용할 시, 원작자 이름 표기가 필요합니다.** 또, **모든 수정된 플러그인은 [GNU General Public License v3.0 라이선스](https://www.gnu.org/licenses/gpl-3.0.html)를 반드시 사용해야 합니다.**
 #### 오류 제보는 [GitHub Issues](https://github.com/yj0524/PoisonousMushroom/issues)에 제보해주시고, 코드 수정 요청은 [GitHub Pull Request](https://github.com/yj0524/PoisonousMushroom/pulls)에 요청해주시기 바랍니다.
