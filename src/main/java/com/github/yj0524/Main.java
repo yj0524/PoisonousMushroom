@@ -43,20 +43,8 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         getLogger().info("Plugin Enabled");
 
-        // 포자 퇴치기 조합법 생성
-        ItemStack item = new ItemStack(Material.TOTEM_OF_UNDYING);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§c포자 퇴치기");
-        item.setItemMeta(meta);
-        NamespacedKey key = new NamespacedKey(this, "poison");
-        ShapedRecipe recipe = new ShapedRecipe(key, item);
-        recipe.shape(" T ", "AMC", " N ");
-        recipe.setIngredient('T', Material.TRIDENT);
-        recipe.setIngredient('A', Material.GOLDEN_APPLE);
-        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
-        recipe.setIngredient('C', Material.GOLDEN_CARROT);
-        recipe.setIngredient('N', Material.NETHER_STAR);
-        Bukkit.addRecipe(recipe);
+        // 레시피 불러오기
+        loadRecipe();
 
         getServer().getPluginManager().registerEvents(this, this);
 
@@ -105,6 +93,23 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         getLogger().info("Plugin Disabled");
+    }
+
+    private void loadRecipe() {
+        // 포자 퇴치기 레시피
+        ItemStack item = new ItemStack(Material.TOTEM_OF_UNDYING);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§c포자 퇴치기");
+        item.setItemMeta(meta);
+        NamespacedKey key = new NamespacedKey(this, "poison");
+        ShapedRecipe recipe = new ShapedRecipe(key, item);
+        recipe.shape(" T ", "AMC", " N ");
+        recipe.setIngredient('T', Material.TRIDENT);
+        recipe.setIngredient('A', Material.GOLDEN_APPLE);
+        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
+        recipe.setIngredient('C', Material.GOLDEN_CARROT);
+        recipe.setIngredient('N', Material.NETHER_STAR);
+        Bukkit.addRecipe(recipe);
     }
 
     private void loadConfig() {
