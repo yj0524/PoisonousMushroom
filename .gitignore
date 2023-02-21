@@ -1,10 +1,13 @@
 # User-specific stuff
 .idea/
+
 Server/
 
 *.iml
 *.ipr
 *.iws
+
+pomFixed.xml
 
 # IntelliJ
 out/

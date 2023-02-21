@@ -18,7 +18,6 @@
 
     <build>
         <finalName>PoisonousMushroom</finalName>
-        <directory>/Server/plugins</directory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
