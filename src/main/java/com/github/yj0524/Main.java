@@ -122,7 +122,7 @@ public class Main extends JavaPlugin implements Listener {
         serverShutDownTick = config.getInt("serverShutDownTick", 600);
         // Save config
         config.set("huskHealth", huskHealth);
-        config.set("huskCount",huskCount);
+        config.set("huskCount", huskCount);
         config.set("mushroomPlayerName", mushroomPlayerName);
         config.set("serverAutoShutDown", serverAutoShutDown);
         config.set("serverShutDownTick", serverShutDownTick);
