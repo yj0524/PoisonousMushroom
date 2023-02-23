@@ -357,8 +357,10 @@ public class Main extends JavaPlugin implements Listener {
                             if (player.getName().toString() == target.getName().toString()) {
                                 player.sendMessage("§a포자 퇴치기를 지급했습니다.");
                             }
-                            player.sendMessage("§a포자 퇴치기를 지급했습니다.");
-                            target.sendMessage("§a포자 퇴치기를 지급받았습니다.");
+                            else if (player.getName().toString() != target.getName().toString()) {
+                                player.sendMessage("§a포자 퇴치기를 지급했습니다.");
+                                target.sendMessage("§a포자 퇴치기를 지급받았습니다.");
+                            }
                         } else {
                             player.sendMessage("§c플레이어를 찾을 수 없습니다.");
                         }
