@@ -354,6 +354,9 @@ public class Main extends JavaPlugin implements Listener {
                             totemMeta.setDisplayName("§c포자 퇴치기");
                             totem.setItemMeta(totemMeta);
                             target.getInventory().addItem(totem);
+                            if (player.getName().toString() == target.getName().toString()) {
+                                player.sendMessage("§a포자 퇴치기를 지급했습니다.");
+                            }
                             player.sendMessage("§a포자 퇴치기를 지급했습니다.");
                             target.sendMessage("§a포자 퇴치기를 지급받았습니다.");
                         } else {
