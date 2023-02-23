@@ -361,10 +361,10 @@ public class Main extends JavaPlugin implements Listener {
                                 player.sendMessage("§a포자 퇴치기를 지급했습니다.");
                                 target.sendMessage("§a포자 퇴치기를 지급받았습니다.");
                             }
-                        } else {
+                        } else if (target == null) {
                             player.sendMessage("§c플레이어를 찾을 수 없습니다.");
                         }
-                    } else {
+                    } else if (!player.isOp()) {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
                 } else {
