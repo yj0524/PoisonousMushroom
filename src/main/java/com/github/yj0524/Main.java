@@ -56,6 +56,15 @@ public class Main extends JavaPlugin implements Listener {
             saveConfig();
         }
 
+        Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    @Override
+    public void onDisable() {
+        getLogger().info("Plugin Disabled");
+    }
+
+    private void addTeam() {
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboard = scoreboardManager.getMainScoreboard();
 
@@ -88,11 +97,6 @@ public class Main extends JavaPlugin implements Listener {
         } else {
             peopleTeam = scoreboard.getTeam("People");
         }
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Plugin Disabled");
     }
 
     private void loadRecipe() {
