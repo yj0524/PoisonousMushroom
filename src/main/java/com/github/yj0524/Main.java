@@ -48,6 +48,8 @@ public class Main extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(this, this);
 
+        addTeam();
+
         // Config.yml 파일 생성
         loadConfig();
         File cfile = new File(getDataFolder(), "config.yml");
