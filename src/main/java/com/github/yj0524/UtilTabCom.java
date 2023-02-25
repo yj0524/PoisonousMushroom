@@ -7,15 +7,14 @@ import org.bukkit.command.TabCompleter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabCom implements TabCompleter {
+public class UtilTabCom implements TabCompleter {
     List<String> arguments = new ArrayList<String>();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] arg) {
         if (arguments.isEmpty()) {
             arguments.add("help");
-            arguments.add("gameend");
-            arguments.add("vaccine");
+            arguments.add("setmushroom");
         }
 
         List<String> result = new ArrayList<>();
@@ -41,15 +40,9 @@ public class TabCom implements TabCompleter {
             return result;
         }
 
-        // vaccine Command
-        if (arg[0].equalsIgnoreCase("vaccine")) {
+        // setmushroom Command
+        if (arg[0].equalsIgnoreCase("setmushroom")) {
             return null;
-        }
-
-        // gameend Command
-        if (arg[0].equalsIgnoreCase("gameend")) {
-            result.clear();
-            return result;
         }
 
         return arguments;
