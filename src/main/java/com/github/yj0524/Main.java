@@ -48,6 +48,7 @@ public class Main extends JavaPlugin implements Listener {
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
+
         getServer().getPluginManager().registerEvents(this, this);
 
         addTeam();
@@ -405,7 +406,7 @@ public class Main extends JavaPlugin implements Listener {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
                 } else if (args[0].equals("help")) {
-                    player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine> [PlayerName (vaccine command only)]");
+                    player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine> [PlayerName (vaccine command only)]");
                 }
             }
         } else if (command.getName().equals("util")) {
@@ -448,6 +449,9 @@ public class Main extends JavaPlugin implements Listener {
                     } else {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
+                }
+                else if (args[0].equals("help")) {
+                    player.sendMessage("§a사용법 : /util <serverautoshutdown, servershutdowntick> [bool (serverautoshutdown command only), int (servershutdowntick command only)]");
                 }
             }
         }
