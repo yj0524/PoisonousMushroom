@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -340,11 +339,22 @@ public class Main extends JavaPlugin implements Listener {
                 if (args.length == 0) {
                     player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine>");
                 }
-                // 만약 arg[0]이 gameend라면 "관리자가 게임을 종료했습니다."라는 SubTitle과 함께 게임 종료
+                // 만약 arg[0]이 gameend라면 "관리자가 게임을 종료했습니다." 라는 SubTitle과 함께 게임 종료
                 else if (args[0].equals("gameend")) {
                     if (player.isOp()) {
-                        allPlayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
-                        // 모든 플레이어들을 Spectator 팀으로 Join
+                        // 모든 플레이어에게 "관리자가 게임을 종료했습니다." 라는 SubTitle을 보냄
+                        for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                            allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
+                        }
+                        // Mushroom 팀을 Spectator 팀으로 모두 Join
+                        for (String entry : mushroomTeam.getEntries()) {
+                            Player player1 = Bukkit.getPlayer(entry);
+                            if (player1 != null) {
+                                player1.setGameMode(GameMode.SPECTATOR);
+                                spectatorTeam.addEntry(player1.getName());
+                            }
+                        }
+                        // People 팀을 Spectator 팀으로 모두 Join
                         for (String entry : peopleTeam.getEntries()) {
                             Player player1 = Bukkit.getPlayer(entry);
                             if (player1 != null) {
@@ -353,12 +363,11 @@ public class Main extends JavaPlugin implements Listener {
                             }
                         }
                         if (serverAutoShutDown) {
-                            Bukkit.getScheduler().runTaskLater(this, () -> {
-                                Bukkit.getServer().shutdown();
-                            }, serverShutDownTick);
+                            // serverShutDownTick 틱 후에 서버 종료
+                            Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
                         }
                     } else {
-                        player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                        player.sendMessage("§c권한이 없습니다.");
                     }
                 }
                 else if (args[0].equals("vaccine")) {
