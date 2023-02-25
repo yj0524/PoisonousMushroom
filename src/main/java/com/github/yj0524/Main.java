@@ -47,6 +47,7 @@ public class Main extends JavaPlugin implements Listener {
         loadRecipe();
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
+        getCommand("util").setTabCompleter(new UtilTabCom());
         getServer().getPluginManager().registerEvents(this, this);
 
         addTeam();
@@ -404,7 +405,49 @@ public class Main extends JavaPlugin implements Listener {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
                 } else if (args[0].equals("help")) {
-                    player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine>");
+                    player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine> [PlayerName (vaccine command only)]");
+                }
+            }
+        } else if (command.getName().equals("util")) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                if (args.length == 0) {
+                    player.sendMessage("§c사용법 : /util <serverautoshutdown, servershutdowntick> [bool (serverautoshutdown command only), int (servershutdowntick command only)]");
+                }
+                else if (args[0].equals("serverautoshutdown")) {
+                    if (player.isOp()) {
+                        if (args.length == 1) {
+                            player.sendMessage("§c사용법 : /util serverautoshutdown [bool]");
+                        } else if (args.length == 2) {
+                            if (args[1].equals("true")) {
+                                serverAutoShutDown = true;
+                                player.sendMessage("§a서버 자동 종료 기능을 활성화했습니다.");
+                            } else if (args[1].equals("false")) {
+                                serverAutoShutDown = false;
+                                player.sendMessage("§a서버 자동 종료 기능을 비활성화했습니다.");
+                            } else {
+                                player.sendMessage("§c사용법 : /util serverautoshutdown [bool]");
+                            }
+                        }
+                    } else {
+                        player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                    }
+                }
+                else if (args[0].equals("servershutdowntick")) {
+                    if (player.isOp()) {
+                        if (args.length == 1) {
+                            player.sendMessage("§c사용법 : /util servershutdowntick [int]");
+                        } else if (args.length == 2) {
+                            try {
+                                serverShutDownTick = Integer.parseInt(args[1]);
+                                player.sendMessage("§a서버 자동 종료 시간을 " + serverShutDownTick + "틱으로 설정했습니다.");
+                            } catch (NumberFormatException e) {
+                                player.sendMessage("§c사용법 : /util servershutdowntick [int]");
+                            }
+                        }
+                    } else {
+                        player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                    }
                 }
             }
         }
