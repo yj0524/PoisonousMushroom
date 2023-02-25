@@ -404,7 +404,7 @@ public class Main extends JavaPlugin implements Listener {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
                 } else if (args[0].equals("help")) {
-                    player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine>");
+                    player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine>");
                 }
             }
         }
