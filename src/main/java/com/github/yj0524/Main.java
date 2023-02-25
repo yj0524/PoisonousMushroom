@@ -47,6 +47,7 @@ public class Main extends JavaPlugin implements Listener {
         // 레시피 불러오기
         loadRecipe();
 
+        Bukkit.getPluginCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getServer().getPluginManager().registerEvents(this, this);
 
         addTeam();
@@ -376,20 +377,23 @@ public class Main extends JavaPlugin implements Listener {
         return true;
     }
 
-    // /gameend 명령어 입력 시, "관리자가 게임을 종료했습니다." 라는 SubTitle을 출력
+    // poisonousmushroom 명령어 입력 시
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        String[] arg = event.getMessage().split("");
         Player player = event.getPlayer();
-        if (event.getMessage().equals("/gameend")) {
-            if (player.isOp()) {
-                for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                    allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
-                    if (serverAutoShutDown) {
-                        Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick);
+        if (event.getMessage().equals("/poisonousmushroom")) {
+            if (arg[0].equals("gameend")) {
+                if (player.isOp()) {
+                    for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                        allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
+                        if (serverAutoShutDown) {
+                            Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick);
+                        }
                     }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
-            } else {
-                player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
             }
         }
     }
