@@ -14,7 +14,8 @@ public class UtilTabCom implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] arg) {
         if (arguments.isEmpty()) {
             arguments.add("help");
-            arguments.add("setmushroom");
+            arguments.add("serverautoshutdown");
+            arguments.add("servershutdowntick");
         }
 
         List<String> result = new ArrayList<>();
@@ -40,9 +41,17 @@ public class UtilTabCom implements TabCompleter {
             return result;
         }
 
-        // setmushroom Command
-        if (arg[0].equalsIgnoreCase("setmushroom")) {
-            return null;
+        // serverautoshutdown Command
+        if (arg[0].equalsIgnoreCase("serverautoshutdown")) {
+            result.add("true");
+            result.add("false");
+            return result;
+        }
+
+        // servershutdowntick Command
+        if (arg[0].equalsIgnoreCase("servershutdowntick")) {
+            result.clear();
+            return result;
         }
 
         return arguments;
