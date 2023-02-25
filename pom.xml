@@ -6,7 +6,7 @@
 
     <groupId>PoisonousMushroom</groupId>
     <artifactId>PoisonousMushroom</artifactId>
-    <version>1.0.9-FEATURE</version>
+    <version>1.1.0-FEATURE</version>
     <packaging>jar</packaging>
 
     <name>PoisonousMushroom</name>
