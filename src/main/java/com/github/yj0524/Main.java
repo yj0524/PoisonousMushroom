@@ -47,7 +47,7 @@ public class Main extends JavaPlugin implements Listener {
         // 레시피 불러오기
         loadRecipe();
 
-        Bukkit.getPluginCommand("poisonousmushroom").setTabCompleter(new TabCom());
+        getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getServer().getPluginManager().registerEvents(this, this);
 
         addTeam();
@@ -330,71 +330,74 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
 
-    // /vaccine 명령어를 입력했을 때, 포자 퇴치기 지급
+    // poisonousmushroom 명령어 입력 시
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equals("vaccine")) {
+        if (command.getName().equals("poisonousmushroom")) {
             if (sender instanceof Player) {
+                Player allPlayers = (Player) sender;
                 Player player = (Player) sender;
                 if (args.length == 0) {
+                    player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine>");
+                }
+                // 만약 arg[0]이 gameend라면 "관리자가 게임을 종료했습니다."라는 SubTitle과 함께 게임 종료
+                else if (args[0].equals("gameend")) {
                     if (player.isOp()) {
-                        ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
-                        ItemMeta totemMeta = totem.getItemMeta();
-                        totemMeta.setDisplayName("§c포자 퇴치기");
-                        totem.setItemMeta(totemMeta);
-                        player.getInventory().addItem(totem);
-                        player.sendMessage("§a포자 퇴치기를 지급했습니다.");
+                        allPlayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
+                        // 모든 플레이어들을 Spectator 팀으로 Join
+                        for (String entry : peopleTeam.getEntries()) {
+                            Player player1 = Bukkit.getPlayer(entry);
+                            if (player1 != null) {
+                                player1.setGameMode(GameMode.SPECTATOR);
+                                spectatorTeam.addEntry(player1.getName());
+                            }
+                        }
+                        if (serverAutoShutDown) {
+                            Bukkit.getScheduler().runTaskLater(this, () -> {
+                                Bukkit.getServer().shutdown();
+                            }, serverShutDownTick);
+                        }
                     } else {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
-                } else if (args.length == 1) {
+                }
+                else if (args[0].equals("vaccine")) {
                     if (player.isOp()) {
-                        Player target = Bukkit.getPlayer(args[0]);
-                        if (target != null) {
+                        // arg[1]이 없을 경우
+                        if (args.length == 1) {
                             ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
                             ItemMeta totemMeta = totem.getItemMeta();
                             totemMeta.setDisplayName("§c포자 퇴치기");
                             totem.setItemMeta(totemMeta);
-                            target.getInventory().addItem(totem);
-                            if (player.getName().toString() == target.getName().toString()) {
-                                player.sendMessage("§a포자 퇴치기를 지급했습니다.");
-                            }
-                            else if (player.getName().toString() != target.getName().toString()) {
-                                player.sendMessage("§a포자 퇴치기를 지급했습니다.");
-                                target.sendMessage("§a포자 퇴치기를 지급받았습니다.");
-                            }
-                        } else if (target == null) {
-                            player.sendMessage("§c플레이어를 찾을 수 없습니다.");
+                            player.getInventory().addItem(totem);
+                            player.sendMessage("§a포자 퇴치기를 지급했습니다.");
                         }
-                    } else if (!player.isOp()) {
+                        // arg[1]이 PlayerName일 경우
+                        else if (args.length == 2) {
+                            Player target = Bukkit.getPlayer(args[1]);
+                            if (target != null) {
+                                ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
+                                ItemMeta totemMeta = totem.getItemMeta();
+                                totemMeta.setDisplayName("§c포자 퇴치기");
+                                totem.setItemMeta(totemMeta);
+                                target.getInventory().addItem(totem);
+                                if (player.getName().toString() == target.getName().toString()) {
+                                    player.sendMessage("§a포자 퇴치기를 지급했습니다.");
+                                }
+                                else if (player.getName().toString() != target.getName().toString()) {
+                                    player.sendMessage("§a포자 퇴치기를 지급했습니다.");
+                                    target.sendMessage("§a포자 퇴치기를 지급받았습니다.");
+                                }
+                            } else if (target == null) {
+                                player.sendMessage("§c플레이어를 찾을 수 없습니다.");
+                            }
+                        }
+                    } else {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
-                } else {
-                    player.sendMessage("§c사용법 : /vaccine [player]");
                 }
             }
         }
-        return true;
-    }
-
-    // poisonousmushroom 명령어 입력 시
-    @EventHandler
-    public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        String[] arg = event.getMessage().split("");
-        Player player = event.getPlayer();
-        if (event.getMessage().equals("/poisonousmushroom")) {
-            if (arg[0].equals("gameend")) {
-                if (player.isOp()) {
-                    for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                        allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
-                        if (serverAutoShutDown) {
-                            Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick);
-                        }
-                    }
-                } else {
-                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
-                }
-            }
-        }
+        return false;
     }
 }
