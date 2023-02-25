@@ -369,8 +369,7 @@ public class Main extends JavaPlugin implements Listener {
                     } else {
                         player.sendMessage("§c권한이 없습니다.");
                     }
-                }
-                else if (args[0].equals("vaccine")) {
+                } else if (args[0].equals("vaccine")) {
                     if (player.isOp()) {
                         // arg[1]이 없을 경우
                         if (args.length == 1) {
@@ -404,6 +403,8 @@ public class Main extends JavaPlugin implements Listener {
                     } else {
                         player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                     }
+                } else if (args[0].equals("help")) {
+                    player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine>");
                 }
             }
         }

@@ -13,6 +13,7 @@ public class TabCom implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] arg) {
         if (arguments.isEmpty()) {
+            arguments.add("help");
             arguments.add("gameend");
             arguments.add("vaccine");
         }
@@ -34,12 +35,18 @@ public class TabCom implements TabCompleter {
             return result;
         }
 
-        // vaccine 뒤에는 플레이어들을 띄움
+        // help Command
+        if (arg[0].equalsIgnoreCase("help")) {
+            result.clear();
+            return result;
+        }
+
+        // vaccine Command
         if (arg[0].equalsIgnoreCase("vaccine")) {
             return null;
         }
 
-        // gameend 뒤에는 아무것도 띄우지 않음
+        // gameend Command
         if (arg[0].equalsIgnoreCase("gameend")) {
             result.clear();
             return result;
