@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Husk;
@@ -52,6 +53,7 @@ public class Main extends JavaPlugin implements Listener {
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
+        getCommand("update").setTabCompleter(new UpdateTabCom());
 
         getServer().getPluginManager().registerEvents(this, this);
 
@@ -461,6 +463,14 @@ public class Main extends JavaPlugin implements Listener {
                 else if (args[0].equals("help")) {
                     player.sendMessage("§a사용법 : /util <serverautoshutdown, servershutdowntick> [bool (serverautoshutdown command only), int (servershutdowntick command only)]");
                 }
+            }
+        } else if (command.getName().equals("update")) {
+            // sender가 console일 경우에 서버 업데이트 확인
+            if (sender instanceof ConsoleCommandSender) {
+                UpdateChecker.check(this, "yj0524", "PoisonousMushroom");
+            }
+            else {
+                sender.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
             }
         }
         return false;
