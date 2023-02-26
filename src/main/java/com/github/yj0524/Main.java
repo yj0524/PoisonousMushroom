@@ -346,7 +346,14 @@ public class Main extends JavaPlugin implements Listener {
                     if (player.isOp()) {
                         // 모든 플레이어에게 "관리자가 게임을 종료했습니다." 라는 SubTitle을 보냄
                         for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                            allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
+                            if (serverAutoShutDown) {
+                                // serverShutDownTick 틱 후에 서버 종료
+                                allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다." + (serverShutDownTick / 20) + "초 후에 서버가 종료됩니다.");
+                                Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
+                            }
+                            else {
+                                allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
+                            }
                         }
                         // Mushroom 팀을 Spectator 팀으로 모두 Join
                         for (String entry : mushroomTeam.getEntries()) {
@@ -363,10 +370,6 @@ public class Main extends JavaPlugin implements Listener {
                                 player1.setGameMode(GameMode.SPECTATOR);
                                 spectatorTeam.addEntry(player1.getName());
                             }
-                        }
-                        if (serverAutoShutDown) {
-                            // serverShutDownTick 틱 후에 서버 종료
-                            Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
                         }
                     } else {
                         player.sendMessage("§c권한이 없습니다.");
