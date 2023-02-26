@@ -464,12 +464,18 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }
         } else if (command.getName().equals("update")) {
-            // sender가 console일 경우에 서버 업데이트 확인
-            if (sender instanceof ConsoleCommandSender) {
-                UpdateChecker.check(this, "yj0524", "PoisonousMushroom");
+            // arg[0]이 없을 경우
+            if (args.length != 1) {
+                sender.sendMessage("§c사용법 : /update <check>");
             }
-            else {
-                sender.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+            else if (args.length == 1) {
+                // sender가 console일 경우에 서버 업데이트 확인
+                if (sender instanceof ConsoleCommandSender) {
+                    UpdateChecker.check(this, "yj0524", "PoisonousMushroom");
+                }
+                else {
+                    sender.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             }
         }
         return false;
