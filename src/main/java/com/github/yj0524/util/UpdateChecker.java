@@ -22,10 +22,9 @@ public class UpdateChecker {
             BufferedReader br = new BufferedReader(ir);
             String version = br.readLine();
             if (version.equals(currentversion)) {
-                Bukkit.getLogger().info("You are using the latest version of the plugin!");
+                Bukkit.getLogger().info("§a최신 버전을 사용 중 입니다.");
             } else {
-                Bukkit.getLogger().info("Outdated plugin!");
-                Bukkit.getLogger().info("Please go to plugin page and download the latest version!");
+                Bukkit.getLogger().info("§c플러그인이 최신 버전이 아닙니다. https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar 에서 다운로드 해 주세요.");
             }
         } catch (Throwable t) {
             try {
@@ -37,13 +36,12 @@ public class UpdateChecker {
                 BufferedReader br = new BufferedReader(ir);
                 String version = br.readLine();
                 if (version.equals(currentversion)) {
-                    Bukkit.getLogger().info("You are using the latest version of the plugin!");
+                    Bukkit.getLogger().info("§a최신 버전을 사용 중 입니다.");
                 } else {
-                    Bukkit.getLogger().info("Outdated plugin!");
-                    Bukkit.getLogger().info("Please go to plugin page and download the latest version!");
+                    Bukkit.getLogger().info("§c플러그인이 최신 버전이 아닙니다. https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar 에서 다운로드 해 주세요.");
                 }
             } catch (Throwable e) {
-                Bukkit.getLogger().info("Error checking plugin update!");
+                Bukkit.getLogger().info("§c업데이트 확인에 실패했습니다.");
             }
         }
     }
