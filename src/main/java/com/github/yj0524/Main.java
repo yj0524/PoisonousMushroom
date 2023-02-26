@@ -1,5 +1,6 @@
 package com.github.yj0524;
 
+import com.github.yj0524.util.UpdateChecker;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -42,6 +43,8 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getLogger().info("Plugin Enabled");
+
+        UpdateChecker.check(this, "yj0524", "PoisonousMushroom");
 
         // 레시피 불러오기
         loadRecipe();
