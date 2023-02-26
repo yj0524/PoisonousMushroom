@@ -418,7 +418,7 @@ public class Main extends JavaPlugin implements Listener {
                 else if (args[0].equals("serverautoshutdown")) {
                     if (player.isOp()) {
                         if (args.length == 1) {
-                            player.sendMessage("§a서버 자동 종료 기능은" + serverAutoShutDown + "입니다.");
+                            player.sendMessage("§a서버 자동 종료 기능은 " + serverAutoShutDown + "입니다.");
                         } else if (args.length == 2) {
                             if (args[1].equals("true")) {
                                 serverAutoShutDown = true;
