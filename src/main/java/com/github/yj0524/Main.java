@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Husk;
+import org.bukkit.entity.Marker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -115,12 +116,13 @@ public class Main extends JavaPlugin implements Listener {
         item.setItemMeta(meta);
         NamespacedKey key = new NamespacedKey(this, "poison");
         ShapedRecipe recipe = new ShapedRecipe(key, item);
-        recipe.shape(" T ", "AMC", " N ");
+        recipe.shape("T S", " N ", "AMC");
         recipe.setIngredient('T', Material.TRIDENT);
+        recipe.setIngredient('S', Material.MUSHROOM_STEW);
+        recipe.setIngredient('N', Material.NETHER_STAR);
         recipe.setIngredient('A', Material.GOLDEN_APPLE);
         recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
         recipe.setIngredient('C', Material.GOLDEN_CARROT);
-        recipe.setIngredient('N', Material.NETHER_STAR);
         Bukkit.addRecipe(recipe);
     }
 
