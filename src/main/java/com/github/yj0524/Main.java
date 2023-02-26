@@ -418,7 +418,7 @@ public class Main extends JavaPlugin implements Listener {
                 else if (args[0].equals("serverautoshutdown")) {
                     if (player.isOp()) {
                         if (args.length == 1) {
-                            player.sendMessage("§c사용법 : /util serverautoshutdown [bool]");
+                            player.sendMessage("§a서버 자동 종료 기능은 " + serverAutoShutDown + "입니다.");
                         } else if (args.length == 2) {
                             if (args[1].equals("true")) {
                                 serverAutoShutDown = true;
@@ -437,7 +437,7 @@ public class Main extends JavaPlugin implements Listener {
                 else if (args[0].equals("servershutdowntick")) {
                     if (player.isOp()) {
                         if (args.length == 1) {
-                            player.sendMessage("§c사용법 : /util servershutdowntick [int]");
+                            player.sendMessage("§a현재 서버 자동 종료 시간은 " + serverShutDownTick + "틱입니다.");
                         } else if (args.length == 2) {
                             try {
                                 serverShutDownTick = Integer.parseInt(args[1]);
