@@ -1,6 +1,7 @@
 package com.github.yj0524.util;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
@@ -12,7 +13,7 @@ import java.util.Objects;
 public class UpdateChecker {
     public static void check(JavaPlugin plugin, String user, String repo) {
         String currentversion = plugin.getDescription().getVersion();
-        Bukkit.getLogger().info("Checking update...");
+        Bukkit.getLogger().info(ChatColor.WHITE + "Checking update...");
         try {
             URL url = new URL(Objects.requireNonNull(
                     Objects.requireNonNull("https://raw.githubusercontent.com/user-name/repo-name/master/version.txt")
@@ -22,9 +23,9 @@ public class UpdateChecker {
             BufferedReader br = new BufferedReader(ir);
             String version = br.readLine();
             if (version.equals(currentversion)) {
-                Bukkit.getLogger().info("§aYou are using the latest version.");
+                Bukkit.getLogger().info(ChatColor.GREEN + "You are using the latest version.");
             } else {
-                Bukkit.getLogger().info("§cPlugin is not up to date. Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
+                Bukkit.getLogger().info(ChatColor.RED + "Plugin is not up to date. Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
             }
         } catch (Throwable t) {
             try {
@@ -36,12 +37,12 @@ public class UpdateChecker {
                 BufferedReader br = new BufferedReader(ir);
                 String version = br.readLine();
                 if (version.equals(currentversion)) {
-                    Bukkit.getLogger().info("§aYou are using the latest version.");
+                    Bukkit.getLogger().info(ChatColor.GREEN + "You are using the latest version.");
                 } else {
-                    Bukkit.getLogger().info("§cPlugin is not up to date. Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
+                    Bukkit.getLogger().info(ChatColor.RED + "Plugin is not up to date. Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
                 }
             } catch (Throwable e) {
-                Bukkit.getLogger().info("§cUpdate check failed.");
+                Bukkit.getLogger().info(ChatColor.RED + "Update check failed.");
             }
         }
     }
