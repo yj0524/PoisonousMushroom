@@ -82,8 +82,6 @@ public class Main extends JavaPlugin implements Listener {
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboard = scoreboardManager.getMainScoreboard();
 
-        Bukkit.getPluginManager().registerEvents(this, this);
-
         // 3개의 팀 생성
         if (scoreboard.getTeam("Spectator") == null) {
             spectatorTeam = scoreboard.registerNewTeam("Spectator");
