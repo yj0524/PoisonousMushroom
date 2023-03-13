@@ -12,8 +12,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Husk;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -42,6 +44,7 @@ public class Main extends JavaPlugin implements Listener {
     public String mushroomPlayerName;
     public boolean serverAutoShutDown;
     public int serverShutDownTick;
+    public int mobFollowRange;
 
     @Override
     public void onEnable() {
@@ -54,7 +57,7 @@ public class Main extends JavaPlugin implements Listener {
 
         getCommand("poisonousmushroom").setExecutor(new PoisonousMushroom());
         getCommand("util").setExecutor(new Util());
-        getCommand("update").setExecutor(new Update());
+        getCommand("update").setExecutor(new Update(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
@@ -137,12 +140,14 @@ public class Main extends JavaPlugin implements Listener {
         mushroomPlayerName = config.getString("mushroomPlayerName", "yj0524_kr");
         serverAutoShutDown = config.getBoolean("serverAutoShutDown", false);
         serverShutDownTick = config.getInt("serverShutDownTick", 600);
+        mobFollowRange = config.getInt("mobFollowRange", 50);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
         config.set("mushroomPlayerName", mushroomPlayerName);
         config.set("serverAutoShutDown", serverAutoShutDown);
         config.set("serverShutDownTick", serverShutDownTick);
+        config.set("mobFollowRange", mobFollowRange);
         saveConfig();
     }
 
@@ -178,7 +183,7 @@ public class Main extends JavaPlugin implements Listener {
 
             Location deathLocation = player.getLocation();
 
-            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
 
             player.setGameMode(GameMode.SPECTATOR);
@@ -342,5 +347,34 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return false;
+    }
+
+    @EventHandler
+    public void onMobSpawn(EntitySpawnEvent event) {
+        if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK) {
+            if (event.getEntityType() == EntityType.ZOMBIE) {
+                Zombie zombie = (Zombie) event.getEntity();
+                zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
+            }
+
+            if (event.getEntityType() == EntityType.HUSK) {
+                Husk husk = (Husk) event.getEntity();
+                husk.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
+            }
+
+            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
+                    if (event.getEntityType() == EntityType.ZOMBIE) {
+                        Zombie zombie = (Zombie) event.getEntity();
+                        zombie.setTarget(allPlayers);
+                    }
+
+                    if (event.getEntityType() == EntityType.HUSK) {
+                        Husk husk = (Husk) event.getEntity();
+                        husk.setTarget(allPlayers);
+                    }
+                }
+            }
+        }
     }
 }
