@@ -9,10 +9,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Husk;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -373,6 +370,30 @@ public class Main extends JavaPlugin implements Listener {
                         Husk husk = (Husk) event.getEntity();
                         husk.setTarget(allPlayers);
                     }
+                }
+            }
+
+            if (event.getEntityType() == EntityType.ZOMBIE) {
+                Zombie zombie = (Zombie) event.getEntity();
+                if (zombie.isBaby()) {
+                    zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.ZOMBIE);
+                    zombie.remove();
+                }
+            }
+
+            if (event.getEntityType() == EntityType.HUSK) {
+                Husk husk = (Husk) event.getEntity();
+                if (husk.isBaby()) {
+                    husk.getWorld().spawnEntity(husk.getLocation(), EntityType.HUSK);
+                    husk.remove();
+                }
+            }
+
+            if (event.getEntityType() == EntityType.DROWNED) {
+                Drowned drowned = (Drowned) event.getEntity();
+                if (drowned.isBaby()) {
+                    drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
+                    drowned.remove();
                 }
             }
         }
