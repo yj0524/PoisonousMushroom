@@ -10,6 +10,8 @@ Server/
 gradle
 .gradle
 
+build_fix.gradle
+
 # IntelliJ
 out/
 
