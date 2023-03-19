@@ -7,7 +7,6 @@ Server/
 *.ipr
 *.iws
 
-gradle
 .gradle
 
 build
