@@ -177,12 +177,13 @@ public class Main extends JavaPlugin implements Listener {
         if (player.getName().equals(mushroomPlayerName)) {
             if (!mushroomTeam.hasEntry(player.getName())) {
                 mushroomTeam.addEntry(player.getName());
+                player.setGameMode(GameMode.SURVIVAL);
             }
         } else {
             if (!peopleTeam.hasEntry(player.getName()) && !spectatorTeam.hasEntry(player.getName())) {
                 peopleTeam.addEntry(player.getName());
             }
-            else if (!isGameEnd) {
+            else if (isGameEnd) {
                 if (peopleTeam.hasEntry(player.getName())) {
                     player.setGameMode(GameMode.SURVIVAL);
                 }
