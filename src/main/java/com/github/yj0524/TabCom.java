@@ -16,6 +16,7 @@ public class TabCom implements TabCompleter {
             arguments.add("help");
             arguments.add("gameend");
             arguments.add("vaccine");
+            arguments.add("respawnsemaphore");
         }
 
         List<String> result = new ArrayList<>();
@@ -41,15 +42,20 @@ public class TabCom implements TabCompleter {
             return result;
         }
 
+        // gameend Command
+        if (arg[0].equalsIgnoreCase("gameend")) {
+            result.clear();
+            return result;
+        }
+
         // vaccine Command
         if (arg[0].equalsIgnoreCase("vaccine")) {
             return null;
         }
 
-        // gameend Command
-        if (arg[0].equalsIgnoreCase("gameend")) {
-            result.clear();
-            return result;
+        // respawnsemaphore Command
+        if (arg[0].equalsIgnoreCase("respawnsemaphore")) {
+            return null;
         }
 
         return arguments;

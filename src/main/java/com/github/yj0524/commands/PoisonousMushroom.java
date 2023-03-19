@@ -15,13 +15,17 @@ public class PoisonousMushroom implements CommandExecutor {
 
     Main main;
 
+    public PoisonousMushroom(Main main) {
+        this.main = main;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player allPlayers = (Player) sender;
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine>");
+                player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore>");
             }
             // 만약 arg[0]이 gameend라면 "관리자가 게임을 종료했습니다." 라는 SubTitle과 함께 게임 종료
             else if (args[0].equals("gameend")) {
@@ -88,8 +92,41 @@ public class PoisonousMushroom implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("respawnsemaphore")) {
+                if (player.isOp()) {
+                    // arg[1]이 없을 경우
+                    if (args.length == 1) {
+                        ItemStack totem = new ItemStack(Material.HEART_OF_THE_SEA);
+                        ItemMeta totemMeta = totem.getItemMeta();
+                        totemMeta.setDisplayName("§a부활 신호기");
+                        totem.setItemMeta(totemMeta);
+                        player.getInventory().addItem(totem);
+                        player.sendMessage("§a부활 신호기를 지급했습니다.");
+                    }
+                    // arg[1]이 PlayerName일 경우
+                    else if (args.length == 2) {
+                        Player target = Bukkit.getPlayer(args[1]);
+                        if (target != null) {
+                            ItemStack totem = new ItemStack(Material.HEART_OF_THE_SEA);
+                            ItemMeta totemMeta = totem.getItemMeta();
+                            totemMeta.setDisplayName("§a부활 신호기");
+                            totem.setItemMeta(totemMeta);
+                            target.getInventory().addItem(totem);
+                            if (player.getName().toString() == target.getName().toString()) {
+                                player.sendMessage("§a부활 신호기를 지급했습니다.");
+                            } else if (player.getName().toString() != target.getName().toString()) {
+                                player.sendMessage("§a부활 신호기를 지급했습니다.");
+                                target.sendMessage("§a부활 신호기를 지급받았습니다.");
+                            }
+                        } else if (target == null) {
+                            player.sendMessage("§c플레이어를 찾을 수 없습니다.");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine> [PlayerName (vaccine command only)]");
+                player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore> [PlayerName (vaccine, respawnsemaphore command only)]");
             }
         }
         return true;

@@ -13,6 +13,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -42,6 +43,7 @@ public class Main extends JavaPlugin implements Listener {
     public boolean serverAutoShutDown;
     public int serverShutDownTick;
     public int mobFollowRange;
+    public int respawnSpectatorRange;
 
     @Override
     public void onEnable() {
@@ -52,8 +54,8 @@ public class Main extends JavaPlugin implements Listener {
         // 레시피 불러오기
         loadRecipe();
 
-        getCommand("poisonousmushroom").setExecutor(new PoisonousMushroom());
-        getCommand("util").setExecutor(new Util());
+        getCommand("poisonousmushroom").setExecutor(new PoisonousMushroom(this));
+        getCommand("util").setExecutor(new Util(this));
         getCommand("update").setExecutor(new Update(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
@@ -127,6 +129,19 @@ public class Main extends JavaPlugin implements Listener {
         recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
         recipe.setIngredient('C', Material.GOLDEN_CARROT);
         Bukkit.addRecipe(recipe);
+
+        // 부활 신호기 레시피
+        ItemStack item2 = new ItemStack(Material.HEART_OF_THE_SEA);
+        ItemMeta meta2 = item2.getItemMeta();
+        meta2.setDisplayName("§a부활 신호기");
+        item2.setItemMeta(meta2);
+        NamespacedKey key2 = new NamespacedKey(this, "resurrection");
+        ShapedRecipe recipe2 = new ShapedRecipe(key2, item2);
+        recipe2.shape(" I ", " D ", " G ");
+        recipe2.setIngredient('I', Material.IRON_INGOT);
+        recipe2.setIngredient('D', Material.DIAMOND);
+        recipe2.setIngredient('G', Material.GOLD_INGOT);
+        Bukkit.addRecipe(recipe2);
     }
 
     private void loadConfig() {
@@ -137,7 +152,8 @@ public class Main extends JavaPlugin implements Listener {
         mushroomPlayerName = config.getString("mushroomPlayerName", "yj0524_kr");
         serverAutoShutDown = config.getBoolean("serverAutoShutDown", false);
         serverShutDownTick = config.getInt("serverShutDownTick", 600);
-        mobFollowRange = config.getInt("mobFollowRange", 50);
+        mobFollowRange = config.getInt("mobFollowRange", 128);
+        respawnSpectatorRange = config.getInt("respawnSpectatorRange", 10);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -145,6 +161,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("serverAutoShutDown", serverAutoShutDown);
         config.set("serverShutDownTick", serverShutDownTick);
         config.set("mobFollowRange", mobFollowRange);
+        config.set("respawnSpectatorRange", respawnSpectatorRange);
         saveConfig();
     }
 
@@ -180,7 +197,7 @@ public class Main extends JavaPlugin implements Listener {
 
             Location deathLocation = player.getLocation();
 
-            world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
 
             player.setGameMode(GameMode.SPECTATOR);
@@ -220,7 +237,7 @@ public class Main extends JavaPlugin implements Listener {
             for (Player allplayers : Bukkit.getOnlinePlayers()) {
                 if (serverAutoShutDown) {
                     // serverAutoShutDown이 true일 경우
-                    allplayers.sendTitle("§c게임 종료", "§c모든 사람이 죽었습니다. §a" + (serverShutDownTick / 20) + "§a초 후에 서버가 종료됩니다.");
+                    allplayers.sendTitle("§c게임 종료", "§c모든 사람이 죽었습니다. " + (serverShutDownTick / 20) + "초 후에 서버가 종료됩니다.");
                     // Spectator 팀을 People 팀으로 모두 Join
                     for (String entry : spectatorTeam.getEntries()) {
                         Player player1 = Bukkit.getPlayer(entry);
@@ -277,7 +294,7 @@ public class Main extends JavaPlugin implements Listener {
                 for (Player allplayers : Bukkit.getOnlinePlayers()) {
                     if (serverAutoShutDown) {
                         // serverAutoShutDown이 true일 경우
-                        allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다. §a" + (serverShutDownTick / 20) + "§a초 후에 서버가 종료됩니다.");
+                        allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다." + (serverShutDownTick / 20) + " 초 후에 서버가 종료됩니다.");
                         // Mushroom 팀을 Spectator 팀으로 모두 Join
                         for (String entry : mushroomTeam.getEntries()) {
                             Player player1 = Bukkit.getPlayer(entry);
@@ -339,6 +356,36 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }
         }
+
+        else if (item != null && item.getType() == Material.HEART_OF_THE_SEA) {
+            if (item.getItemMeta().getDisplayName().equals("§a부활 신호기")) {
+                // 사용 후, 아이템 삭제
+                player.getInventory().setItemInMainHand(null);
+
+                int tmpPlayer = peopleTeam.getSize();
+
+                // 사용한 사람 기준 주변 10블록 관전자에게 People 팀으로 Join
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    if (allplayers.getGameMode() == GameMode.SPECTATOR) {
+                        if (allplayers.getLocation().distance(player.getLocation()) <= respawnSpectatorRange) {
+                            allplayers.setGameMode(GameMode.SURVIVAL);
+                            spectatorTeam.removeEntry(allplayers.getName());
+                            peopleTeam.addEntry(allplayers.getName());
+                        }
+                    }
+                }
+
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    allplayers.sendMessage("§a" + player.getName() + " 님이 부활 신호기를 사용했습니다!");
+
+                    if (tmpPlayer == peopleTeam.getSize()) {
+                        allplayers.sendMessage("§c하지만, 주변에 영혼이 없어서 부활에 실패했습니다!");
+                        allplayers.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
+                    }
+                    else allplayers.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                }
+            }
+        }
     }
 
     @Override
@@ -348,7 +395,7 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onMobSpawn(EntitySpawnEvent event) {
-        if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK) {
+        if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED) {
             if (event.getEntityType() == EntityType.ZOMBIE) {
                 Zombie zombie = (Zombie) event.getEntity();
                 zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
@@ -375,10 +422,8 @@ public class Main extends JavaPlugin implements Listener {
 
             if (event.getEntityType() == EntityType.ZOMBIE) {
                 Zombie zombie = (Zombie) event.getEntity();
-                if (zombie.isBaby()) {
-                    zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.ZOMBIE);
-                    zombie.remove();
-                }
+                zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.HUSK);
+                zombie.remove();
             }
 
             if (event.getEntityType() == EntityType.HUSK) {
@@ -389,12 +434,21 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }
 
+            // 드라운드를 허스크로 변환
             if (event.getEntityType() == EntityType.DROWNED) {
                 Drowned drowned = (Drowned) event.getEntity();
-                if (drowned.isBaby()) {
-                    drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
-                    drowned.remove();
-                }
+                drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
+                drowned.remove();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityTarget(EntityTargetLivingEntityEvent event) {
+        if (event.getTarget() instanceof Player) {
+            Player player = (Player) event.getTarget();
+            if (mushroomTeam.hasEntry(player.getName())) {
+                event.setCancelled(true);
             }
         }
     }
