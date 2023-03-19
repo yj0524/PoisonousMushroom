@@ -36,6 +36,8 @@ public class Main extends JavaPlugin implements Listener {
     public Team mushroomTeam;
     public Team peopleTeam;
 
+    public boolean isGameEnd = false;
+
     // Config.yml 파일에 들어갈 값들
     public int huskHealth;
     public int huskCount;
@@ -78,6 +80,8 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         getLogger().info("Plugin Disabled");
+
+        isGameEnd = false;
     }
 
     private void addTeam() {
@@ -177,6 +181,11 @@ public class Main extends JavaPlugin implements Listener {
         } else {
             if (!peopleTeam.hasEntry(player.getName()) && !spectatorTeam.hasEntry(player.getName())) {
                 peopleTeam.addEntry(player.getName());
+            }
+            else if (!isGameEnd) {
+                if (peopleTeam.hasEntry(player.getName())) {
+                    player.setGameMode(GameMode.SURVIVAL);
+                }
             }
         }
     }

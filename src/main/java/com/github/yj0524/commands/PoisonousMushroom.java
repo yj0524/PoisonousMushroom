@@ -48,14 +48,14 @@ public class PoisonousMushroom implements CommandExecutor {
                             main.spectatorTeam.addEntry(player1.getName());
                         }
                     }
-                    // People 팀을 Spectator 팀으로 모두 Join
+                    // People 팀을 Spectator 모드로 변경
                     for (String entry : main.peopleTeam.getEntries()) {
                         Player player1 = Bukkit.getPlayer(entry);
                         if (player1 != null) {
                             player1.setGameMode(GameMode.SPECTATOR);
-                            main.spectatorTeam.addEntry(player1.getName());
                         }
                     }
+                    main.isGameEnd = true;
                 } else {
                     player.sendMessage("§c권한이 없습니다.");
                 }
