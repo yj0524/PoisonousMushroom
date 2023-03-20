@@ -297,102 +297,111 @@ public class Main extends JavaPlugin implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item != null && item.getType() == Material.TOTEM_OF_UNDYING) {
             if (item.getItemMeta().getDisplayName().equals("§c포자 퇴치기")) {
-                // 사용 후, 아이템 삭제
-                player.getInventory().setItemInMainHand(null);
+                if (!mushroomTeam.hasEntry(player.getName())) {
+                    // 사용 후, 아이템 삭제
+                    player.getInventory().setItemInMainHand(null);
 
-                // 게임 종료
-                for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                    if (serverAutoShutDown) {
-                        // serverAutoShutDown이 true일 경우
-                        allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다." + (serverShutDownTick / 20) + " 초 후에 서버가 종료됩니다.");
-                        // Mushroom 팀을 Spectator 팀으로 모두 Join
-                        for (String entry : mushroomTeam.getEntries()) {
-                            Player player1 = Bukkit.getPlayer(entry);
-                            if (player1 != null) {
-                                player1.setGameMode(GameMode.SPECTATOR);
-                                spectatorTeam.addEntry(player1.getName());
-                            }
-                        }
-                        // "버섯이 소멸했습니다!" 라는 메시지를 모두에게 출력
-                        for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                            allplayers1.sendMessage("§c버섯이 소멸했습니다!");
-                        }
-                        // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
-                        Bukkit.getScheduler().runTaskLater(this, () -> {
-                            // People 팀을 Spectator 팀으로 모두 Join
-                            for (String entry : peopleTeam.getEntries()) {
+                    // 게임 종료
+                    for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                        if (serverAutoShutDown) {
+                            // serverAutoShutDown이 true일 경우
+                            allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다." + (serverShutDownTick / 20) + " 초 후에 서버가 종료됩니다.");
+                            // Mushroom 팀을 Spectator 팀으로 모두 Join
+                            for (String entry : mushroomTeam.getEntries()) {
                                 Player player1 = Bukkit.getPlayer(entry);
                                 if (player1 != null) {
                                     player1.setGameMode(GameMode.SPECTATOR);
                                     spectatorTeam.addEntry(player1.getName());
                                 }
                             }
+                            // "버섯이 소멸했습니다!" 라는 메시지를 모두에게 출력
                             for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                                allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                allplayers1.sendMessage("§c버섯이 소멸했습니다!");
                             }
-                        }, 200);
-                        // serverShutDownTick 틱 후에 서버 종료
-                        Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
-                    } else {
-                        // serverAutoShutDown이 false일 경우
-                        allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다.");
-                        // Mushroom 팀을 Spectator 팀으로 모두 Join
-                        for (String entry : mushroomTeam.getEntries()) {
-                            Player player1 = Bukkit.getPlayer(entry);
-                            if (player1 != null) {
-                                player1.setGameMode(GameMode.SPECTATOR);
-                                spectatorTeam.addEntry(player1.getName());
-                            }
-                        }
-                        // "버섯이 소멸했습니다!" 라는 메시지를 모두에게 출력
-                        for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                            allplayers1.sendMessage("§c버섯이 소멸했습니다!");
-                        }
-                        // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
-                        Bukkit.getScheduler().runTaskLater(this, () -> {
-                            // People 팀을 Spectator 팀으로 모두 Join
-                            for (String entry : peopleTeam.getEntries()) {
+                            // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
+                            Bukkit.getScheduler().runTaskLater(this, () -> {
+                                // People 팀을 Spectator 팀으로 모두 Join
+                                for (String entry : peopleTeam.getEntries()) {
+                                    Player player1 = Bukkit.getPlayer(entry);
+                                    if (player1 != null) {
+                                        player1.setGameMode(GameMode.SPECTATOR);
+                                        spectatorTeam.addEntry(player1.getName());
+                                    }
+                                }
+                                for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                    allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                }
+                            }, 200);
+                            // serverShutDownTick 틱 후에 서버 종료
+                            Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
+                        } else {
+                            // serverAutoShutDown이 false일 경우
+                            allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다.");
+                            // Mushroom 팀을 Spectator 팀으로 모두 Join
+                            for (String entry : mushroomTeam.getEntries()) {
                                 Player player1 = Bukkit.getPlayer(entry);
                                 if (player1 != null) {
                                     player1.setGameMode(GameMode.SPECTATOR);
                                     spectatorTeam.addEntry(player1.getName());
                                 }
                             }
+                            // "버섯이 소멸했습니다!" 라는 메시지를 모두에게 출력
                             for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                                allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                allplayers1.sendMessage("§c버섯이 소멸했습니다!");
                             }
-                        }, 200);
+                            // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
+                            Bukkit.getScheduler().runTaskLater(this, () -> {
+                                // People 팀을 Spectator 팀으로 모두 Join
+                                for (String entry : peopleTeam.getEntries()) {
+                                    Player player1 = Bukkit.getPlayer(entry);
+                                    if (player1 != null) {
+                                        player1.setGameMode(GameMode.SPECTATOR);
+                                        spectatorTeam.addEntry(player1.getName());
+                                    }
+                                }
+                                for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                    allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                }
+                            }, 200);
+                        }
                     }
+                }
+                else {
+                    player.sendMessage("§c사용할 수 없습니다!");
                 }
             }
         }
 
         else if (item != null && item.getType() == Material.HEART_OF_THE_SEA) {
             if (item.getItemMeta().getDisplayName().equals("§a부활 신호기")) {
-                // 사용 후, 아이템 삭제
-                player.getInventory().setItemInMainHand(null);
+                if (!mushroomTeam.hasEntry(player.getName())) {
+                    // 사용 후, 아이템 삭제
+                    player.getInventory().setItemInMainHand(null);
 
-                int tmpPlayer = peopleTeam.getSize();
+                    int tmpPlayer = peopleTeam.getSize();
 
-                // 사용한 사람 기준 주변 10블록 관전자에게 People 팀으로 Join
-                for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                    if (allplayers.getGameMode() == GameMode.SPECTATOR) {
-                        if (allplayers.getLocation().distance(player.getLocation()) <= respawnSpectatorRange) {
-                            allplayers.setGameMode(GameMode.SURVIVAL);
-                            spectatorTeam.removeEntry(allplayers.getName());
-                            peopleTeam.addEntry(allplayers.getName());
+                    // 사용한 사람 기준 주변 10블록 관전자에게 People 팀으로 Join
+                    for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                        if (allplayers.getGameMode() == GameMode.SPECTATOR) {
+                            if (allplayers.getLocation().distance(player.getLocation()) <= respawnSpectatorRange) {
+                                allplayers.setGameMode(GameMode.SURVIVAL);
+                                spectatorTeam.removeEntry(allplayers.getName());
+                                peopleTeam.addEntry(allplayers.getName());
+                            }
                         }
                     }
-                }
 
-                for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                    allplayers.sendMessage("§a" + player.getName() + " 님이 부활 신호기를 사용했습니다!");
+                    for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                        allplayers.sendMessage("§a" + player.getName() + " 님이 부활 신호기를 사용했습니다!");
 
-                    if (tmpPlayer == peopleTeam.getSize()) {
-                        allplayers.sendMessage("§c하지만, 주변에 영혼이 없어서 부활에 실패했습니다!");
-                        allplayers.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
+                        if (tmpPlayer == peopleTeam.getSize()) {
+                            allplayers.sendMessage("§c하지만, 주변에 영혼이 없어서 부활에 실패했습니다!");
+                            allplayers.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
+                        } else allplayers.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                     }
-                    else allplayers.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                }
+                else {
+                    player.sendMessage("§c사용할 수 없습니다!");
                 }
             }
         }
@@ -449,6 +458,10 @@ public class Main extends JavaPlugin implements Listener {
                 Drowned drowned = (Drowned) event.getEntity();
                 drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
                 drowned.remove();
+                if (drowned.isBaby()) {
+                    drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
+                    drowned.remove();
+                }
             }
         }
     }
