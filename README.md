@@ -15,10 +15,14 @@
 
 ## 플러그인 설명
 #### 버킷 Main 폴더에서 plugins 폴더에 [PoisonousMushroom.jar](https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar) 파일을 넣으면 PoisonousMushroom 폴더가 생깁니다.
-#### PoisonousMushroom 폴더 안에 config.yml 파일을 열어 huskHealth, huskCount, mushroomPlayerName 값을 설정할 수 있습니다.
+#### PoisonousMushroom 폴더 안에 config.yml 파일을 열어 아래의 값을 설정할 수 있습니다.
 #### huskHealth : 일반 시민이 죽었을 때 생성할 허스크의 체력을 설정합니다.
 #### huskCount : 일반 시민이 죽었을 때 생성할 허스크의 마릿수를 설정합니다.
 #### mushroomPlayerName : 독버섯을 할 플레이어의 이름을 설정합니다.
+#### serverAutoShutDown : 서버 자동 종료 여부를 설정합니다.
+#### serverShutDownTick : 서버 자동 종료 시간을 설정합니다.
+#### mobFollowRange : 몬스터의 추적 거리를 설정합니다.
+#### respawnSpectatorRange : 부활 신호기를 사용한 사람의 반경에 있는 사망자를 부활시키는 거리를 설정합니다.
 #### People 팀에 Join 되어있다면, 죽었을 때 Spectator 팀으로 Join 됨과 동시에 게임 모드가 Spectator 모드로 변경됩니다.
 #### 만일 Mushroom 팀에 Join 되어있는 플레이어가 죽었을 때는 아무 일도 일어나지 않고 Mushroom 팀에 Join 되어 있는 사람이 월드의 스폰으로 이동합니다.
 
