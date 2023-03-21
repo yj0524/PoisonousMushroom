@@ -27,9 +27,11 @@ public class Util implements CommandExecutor {
                     } else if (args.length == 2) {
                         if (args[1].equals("true")) {
                             main.serverAutoShutDown = true;
+                            main.saveConfig();
                             player.sendMessage("§a서버 자동 종료 기능을 활성화했습니다.");
                         } else if (args[1].equals("false")) {
                             main.serverAutoShutDown = false;
+                            main.saveConfig();
                             player.sendMessage("§a서버 자동 종료 기능을 비활성화했습니다.");
                         } else {
                             player.sendMessage("§c사용법 : /util serverautoshutdown [bool]");
@@ -45,6 +47,7 @@ public class Util implements CommandExecutor {
                     } else if (args.length == 2) {
                         try {
                             main.serverShutDownTick = Integer.parseInt(args[1]);
+                            main.saveConfig();
                             player.sendMessage("§a서버 자동 종료 시간을 " + main.serverShutDownTick + "틱으로 설정했습니다.");
                         } catch (NumberFormatException e) {
                             player.sendMessage("§c사용법 : /util servershutdowntick [int]");
