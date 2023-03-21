@@ -149,7 +149,7 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     private void loadConfig() {
-        // Load chest size from config
+        // Load config
         FileConfiguration config = getConfig();
         huskHealth = config.getInt("huskHealth", 20);
         huskCount = config.getInt("huskCount", 10);
