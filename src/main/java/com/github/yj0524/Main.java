@@ -453,7 +453,6 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }
 
-            // 드라운드를 허스크로 변환
             if (event.getEntityType() == EntityType.DROWNED) {
                 Drowned drowned = (Drowned) event.getEntity();
                 drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
