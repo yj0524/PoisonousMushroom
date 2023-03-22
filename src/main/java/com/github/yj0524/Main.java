@@ -1,9 +1,7 @@
 package com.github.yj0524;
 
-import com.github.yj0524.commands.PoisonousMushroom;
-import com.github.yj0524.commands.Update;
-import com.github.yj0524.commands.Util;
-import com.github.yj0524.util.UpdateChecker;
+import com.github.yj0524.commands.*;
+import com.github.yj0524.util.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -60,10 +58,12 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("poisonousmushroom").setExecutor(new PoisonousMushroom(this));
         getCommand("util").setExecutor(new Util(this));
         getCommand("update").setExecutor(new Update(this));
+        getCommand("configreload").setExecutor(new ConfigReload(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
         getCommand("update").setTabCompleter(new UpdateTabCom());
+        getCommand("configreload").setTabCompleter(new ConfigReloadTabCom());
 
         addTeam();
 
@@ -149,7 +149,7 @@ public class Main extends JavaPlugin implements Listener {
         Bukkit.addRecipe(recipe2);
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         // Load config
         FileConfiguration config = getConfig();
         huskHealth = config.getInt("huskHealth", 20);

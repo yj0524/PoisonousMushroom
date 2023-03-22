@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TabCom implements TabCompleter {
+
     List<String> arguments = new ArrayList<String>();
 
     @Override
