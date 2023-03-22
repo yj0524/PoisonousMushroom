@@ -46,6 +46,7 @@ public class Main extends JavaPlugin implements Listener {
     public int serverShutDownTick;
     public int mobFollowRange;
     public int respawnSpectatorRange;
+    public boolean mobSpawn;
 
     @Override
     public void onEnable() {
@@ -158,6 +159,7 @@ public class Main extends JavaPlugin implements Listener {
         serverShutDownTick = config.getInt("serverShutDownTick", 600);
         mobFollowRange = config.getInt("mobFollowRange", 128);
         respawnSpectatorRange = config.getInt("respawnSpectatorRange", 10);
+        mobSpawn = config.getBoolean("mobSpawn", true);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -166,6 +168,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("serverShutDownTick", serverShutDownTick);
         config.set("mobFollowRange", mobFollowRange);
         config.set("respawnSpectatorRange", respawnSpectatorRange);
+        config.set("mobSpawn", mobSpawn);
         saveConfig();
     }
 
@@ -414,54 +417,59 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onMobSpawn(EntitySpawnEvent event) {
-        if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED) {
-            if (event.getEntityType() == EntityType.ZOMBIE) {
-                Zombie zombie = (Zombie) event.getEntity();
-                zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
-            }
+        if (mobSpawn) {
+            if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED) {
+                if (event.getEntityType() == EntityType.ZOMBIE) {
+                    Zombie zombie = (Zombie) event.getEntity();
+                    zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
+                }
 
-            if (event.getEntityType() == EntityType.HUSK) {
-                Husk husk = (Husk) event.getEntity();
-                husk.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
-            }
+                if (event.getEntityType() == EntityType.HUSK) {
+                    Husk husk = (Husk) event.getEntity();
+                    husk.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
+                }
 
-            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
-                if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
-                    if (event.getEntityType() == EntityType.ZOMBIE) {
-                        Zombie zombie = (Zombie) event.getEntity();
-                        zombie.setTarget(allPlayers);
-                    }
+                for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                    if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
+                        if (event.getEntityType() == EntityType.ZOMBIE) {
+                            Zombie zombie = (Zombie) event.getEntity();
+                            zombie.setTarget(allPlayers);
+                        }
 
-                    if (event.getEntityType() == EntityType.HUSK) {
-                        Husk husk = (Husk) event.getEntity();
-                        husk.setTarget(allPlayers);
+                        if (event.getEntityType() == EntityType.HUSK) {
+                            Husk husk = (Husk) event.getEntity();
+                            husk.setTarget(allPlayers);
+                        }
                     }
                 }
-            }
 
-            if (event.getEntityType() == EntityType.ZOMBIE) {
-                Zombie zombie = (Zombie) event.getEntity();
-                zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.HUSK);
-                zombie.remove();
-            }
-
-            if (event.getEntityType() == EntityType.HUSK) {
-                Husk husk = (Husk) event.getEntity();
-                if (husk.isBaby()) {
-                    husk.getWorld().spawnEntity(husk.getLocation(), EntityType.HUSK);
-                    husk.remove();
+                if (event.getEntityType() == EntityType.ZOMBIE) {
+                    Zombie zombie = (Zombie) event.getEntity();
+                    zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.HUSK);
+                    zombie.remove();
                 }
-            }
 
-            if (event.getEntityType() == EntityType.DROWNED) {
-                Drowned drowned = (Drowned) event.getEntity();
-                drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
-                drowned.remove();
-                if (drowned.isBaby()) {
+                if (event.getEntityType() == EntityType.HUSK) {
+                    Husk husk = (Husk) event.getEntity();
+                    if (husk.isBaby()) {
+                        husk.getWorld().spawnEntity(husk.getLocation(), EntityType.HUSK);
+                        husk.remove();
+                    }
+                }
+
+                if (event.getEntityType() == EntityType.DROWNED) {
+                    Drowned drowned = (Drowned) event.getEntity();
                     drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
                     drowned.remove();
+                    if (drowned.isBaby()) {
+                        drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
+                        drowned.remove();
+                    }
                 }
             }
+        }
+        else {
+            event.setCancelled(true);
         }
     }
 

@@ -19,7 +19,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <serverautoshutdown, servershutdowntick> [bool (serverautoshutdown command only), int (servershutdowntick command only)]");
+                player.sendMessage("§c사용법 : /util <serverautoshutdown, servershutdowntick, mobspawn> [bool (serverautoshutdown, mobspawn command only), int (servershutdowntick command only)]");
             } else if (args[0].equals("serverautoshutdown")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -51,6 +51,26 @@ public class Util implements CommandExecutor {
                             player.sendMessage("§a서버 자동 종료 시간을 " + main.serverShutDownTick + "틱으로 설정했습니다.");
                         } catch (NumberFormatException e) {
                             player.sendMessage("§c사용법 : /util servershutdowntick [int]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("mobspawn")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a몹 스폰 기능은 " + main.mobSpawn + "입니다.");
+                    } else if (args.length == 2) {
+                        if (args[1].equals("true")) {
+                            main.mobSpawn = true;
+                            main.saveConfig();
+                            player.sendMessage("§a몹 스폰 기능을 활성화했습니다.");
+                        } else if (args[1].equals("false")) {
+                            main.mobSpawn = false;
+                            main.saveConfig();
+                            player.sendMessage("§a몹 스폰 기능을 비활성화했습니다.");
+                        } else {
+                            player.sendMessage("§c사용법 : /util mobspawn [bool]");
                         }
                     }
                 } else {
