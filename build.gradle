@@ -34,7 +34,7 @@ dependencies {
 
 group = 'PoisonousMushroom'
 description = 'PoisonousMushroom'
-java.sourceCompatibility = JavaVersion.VERSION_20
+java.sourceCompatibility = JavaVersion.VERSION_19
 
 publishing {
     publications {
