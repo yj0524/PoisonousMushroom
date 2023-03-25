@@ -15,8 +15,14 @@ public class UtilTabCom implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] arg) {
         if (arguments.isEmpty()) {
             arguments.add("help");
+            arguments.add("huskhealth");
+            arguments.add("huskcount");
+            arguments.add("mushroomplayername");
             arguments.add("serverautoshutdown");
             arguments.add("servershutdowntick");
+            arguments.add("mobfollowrange");
+            arguments.add("respawnspectatorrange");
+            arguments.add("mobspawn");
         }
 
         List<String> result = new ArrayList<>();
@@ -42,6 +48,24 @@ public class UtilTabCom implements TabCompleter {
             return result;
         }
 
+        // huskhealth Command
+        if (arg[0].equalsIgnoreCase("huskhealth")) {
+            result.clear();
+            return result;
+        }
+
+        // huskcount Command
+        if (arg[0].equalsIgnoreCase("huskcount")) {
+            result.clear();
+            return result;
+        }
+
+        // mushroomplayername Command
+        if (arg[0].equalsIgnoreCase("mushroomplayername")) {
+            result.clear();
+            return result;
+        }
+
         // serverautoshutdown Command
         if (arg[0].equalsIgnoreCase("serverautoshutdown")) {
             result.add("true");
@@ -52,6 +76,25 @@ public class UtilTabCom implements TabCompleter {
         // servershutdowntick Command
         if (arg[0].equalsIgnoreCase("servershutdowntick")) {
             result.clear();
+            return result;
+        }
+
+        // mobfollowrange Command
+        if (arg[0].equalsIgnoreCase("mobfollowrange")) {
+            result.clear();
+            return result;
+        }
+
+        // respawnspectatorrange Command
+        if (arg[0].equalsIgnoreCase("respawnspectatorrange")) {
+            result.clear();
+            return result;
+        }
+
+        // mobspawn Command
+        if (arg[0].equalsIgnoreCase("mobspawn")) {
+            result.add("true");
+            result.add("false");
             return result;
         }
 

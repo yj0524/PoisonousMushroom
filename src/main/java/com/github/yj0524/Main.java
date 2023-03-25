@@ -89,12 +89,12 @@ public class Main extends JavaPlugin implements Listener {
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboard = scoreboardManager.getMainScoreboard();
 
-        // 3개의 팀 생성
+        // 팀 3개 생성
         if (scoreboard.getTeam("Spectator") == null) {
             spectatorTeam = scoreboard.registerNewTeam("Spectator");
             spectatorTeam.setDisplayName("Spectator");
             spectatorTeam.setPrefix(ChatColor.GRAY + "[Spectator] ");
-            peopleTeam.setAllowFriendlyFire(false);
+            spectatorTeam.setAllowFriendlyFire(false);
         } else {
             spectatorTeam = scoreboard.getTeam("Spectator");
         }
@@ -103,7 +103,7 @@ public class Main extends JavaPlugin implements Listener {
             mushroomTeam = scoreboard.registerNewTeam("Mushroom");
             mushroomTeam.setDisplayName("Mushroom");
             mushroomTeam.setPrefix(ChatColor.RED + "[Mushroom] ");
-            peopleTeam.setAllowFriendlyFire(false);
+            mushroomTeam.setAllowFriendlyFire(false);
         } else {
             mushroomTeam = scoreboard.getTeam("Mushroom");
         }
