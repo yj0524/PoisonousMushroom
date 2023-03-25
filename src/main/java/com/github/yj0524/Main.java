@@ -46,7 +46,7 @@ public class Main extends JavaPlugin implements Listener {
     public int mobFollowRange;
     public int respawnSpectatorRange;
     public boolean mobSpawn;
-    public int huskTridentPercent;
+    public double huskTridentPercent;
 
     @Override
     public void onEnable() {
@@ -168,7 +168,7 @@ public class Main extends JavaPlugin implements Listener {
         mobFollowRange = config.getInt("mobFollowRange", 128);
         respawnSpectatorRange = config.getInt("respawnSpectatorRange", 10);
         mobSpawn = config.getBoolean("mobSpawn", true);
-        huskTridentPercent = config.getInt("huskTridentPercent", 1);
+        huskTridentPercent = config.getDouble("huskTridentPercent", 1.0);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);

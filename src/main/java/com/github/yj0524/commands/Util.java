@@ -36,7 +36,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent> [bool (serverautoshutdown, mobspawn command only), int (huskhealth, huskcount, servershutdowntick, mobfollowrange, respawnspectatorrange, husktridentpercent command only), string (mushroomplayername command only)]");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn> [bool (serverautoshutdown, mobspawn command only), int (huskhealth, huskcount, servershutdowntick, mobfollowrange, respawnspectatorrange, husktridentpercent command only), string (mushroomplayername command only), double (husktridentpercent command only)]");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -181,14 +181,14 @@ public class Util implements CommandExecutor {
                             saveConfig();
                             player.sendMessage("§a허스크가 삼지창을 떨어뜨릴 확률을 " + main.huskTridentPercent + "%로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util husktridentpercent [int]");
+                            player.sendMessage("§c사용법 : /util husktridentpercent [double]");
                         }
                     }
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent> [bool (serverautoshutdown, mobspawn command only), int (huskhealth, huskcount, servershutdowntick, mobfollowrange, respawnspectatorrange, husktridentpercent command only), string (mushroomplayername command only)]");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent> [bool (serverautoshutdown, mobspawn command only), int (huskhealth, huskcount, servershutdowntick, mobfollowrange, respawnspectatorrange command only), string (mushroomplayername command only), double (husktridentpercent command only)]");
             }
         }
         return true;
