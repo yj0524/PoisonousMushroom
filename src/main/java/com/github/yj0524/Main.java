@@ -227,7 +227,7 @@ public class Main extends JavaPlugin implements Listener {
             husk.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(huskHealth);
             husk.setHealth(huskHealth);
 
-            // 같은 팀 주변에 허스크 10마리 생성
+            // 같은 팀 주변에 허스크 생성
             for (Player teamPlayer : Bukkit.getOnlinePlayers()) {
                 if (teamPlayer != player && playerTeam.getName().equals("People")) {
                     Location playerLocation = teamPlayer.getLocation();

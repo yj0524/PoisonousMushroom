@@ -1,10 +1,8 @@
 package com.github.yj0524.commands;
 
 import com.github.yj0524.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +11,7 @@ import org.bukkit.entity.Husk;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Random;
+import org.bukkit.scoreboard.Team;
 
 public class PoisonousMushroom implements CommandExecutor {
 
@@ -130,14 +127,20 @@ public class PoisonousMushroom implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
-                // forcehuskspawn
             } else if (args[0].equals("forcehuskspawn")) {
                 if (player.isOp()) {
-                    for (int i = 0; i < main.huskCount; i++) {
-                        Location location = player.getLocation();
-                        location.add(new Random().nextInt(30), 0, new Random().nextInt(30));
-                        Husk husk = (Husk) location.getWorld().spawnEntity(location, EntityType.HUSK);
-                        husk.setHealth(main.huskHealth);
+                    for (Player teamPlayer : Bukkit.getOnlinePlayers()) {
+                        World world = player.getWorld();
+                        Team playerTeam = main.scoreboard.getPlayerTeam(player);
+                        if (teamPlayer != player && playerTeam.getName().equals("People")) {
+                            Location playerLocation = teamPlayer.getLocation();
+                            for (int i = 0; i < main.huskCount; i++) {
+                                Location huskLocation = playerLocation.clone().add(Math.random() * 60 - 30, 0, Math.random() * 60 - 30);
+                                Husk husks = (Husk) world.spawnEntity(huskLocation, EntityType.HUSK);
+                                husks.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(main.huskHealth);
+                                husks.setHealth(main.huskHealth);
+                            }
+                        }
                     }
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
