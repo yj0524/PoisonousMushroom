@@ -26,6 +26,10 @@ public class Util implements CommandExecutor {
         main.saveConfig();
     }
 
+    public void gamerule(String gamerule, String value) {
+        main.getServer().dispatchCommand(main.getServer().getConsoleSender(), "gamerule " + gamerule + " " + value);
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -152,10 +156,12 @@ public class Util implements CommandExecutor {
                         if (args[1].equals("true")) {
                             main.mobSpawn = true;
                             saveConfig();
+                            gamerule("doMobSpawning", String.valueOf((Boolean) main.mobSpawn));
                             player.sendMessage("§a몹 스폰 기능을 활성화했습니다.");
                         } else if (args[1].equals("false")) {
                             main.mobSpawn = false;
                             saveConfig();
+                            gamerule("doMobSpawning", String.valueOf((Boolean) main.mobSpawn));
                             player.sendMessage("§a몹 스폰 기능을 비활성화했습니다.");
                         } else {
                             player.sendMessage("§c사용법 : /util mobspawn [bool]");
