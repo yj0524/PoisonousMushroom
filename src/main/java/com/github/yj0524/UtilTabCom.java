@@ -23,6 +23,7 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("mobfollowrange");
             arguments.add("respawnspectatorrange");
             arguments.add("mobspawn");
+            arguments.add("husktridentpercent");
         }
 
         List<String> result = new ArrayList<>();

@@ -174,12 +174,12 @@ public class Util implements CommandExecutor {
             } else if (args[0].equals("husktridentpercent")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
-                        player.sendMessage("§a현재 허스크가 삼지창을 떨어뜨릴 확률은 " + main.huskTridentPercent + "입니다.");
+                        player.sendMessage("§a현재 허스크가 삼지창을 떨어뜨릴 확률은 " + main.huskTridentPercent + "%입니다.");
                     } else if (args.length == 2) {
                         try {
                             main.huskTridentPercent = Integer.parseInt(args[1]);
                             saveConfig();
-                            player.sendMessage("§a허스크가 삼지창을 떨어뜨릴 확률을 " + main.huskTridentPercent + "으로 설정했습니다.");
+                            player.sendMessage("§a허스크가 삼지창을 떨어뜨릴 확률을 " + main.huskTridentPercent + "%로 설정했습니다.");
                         } catch (NumberFormatException e) {
                             player.sendMessage("§c사용법 : /util husktridentpercent [int]");
                         }
