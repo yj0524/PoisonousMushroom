@@ -85,6 +85,10 @@ public class Main extends JavaPlugin implements Listener {
         isGameEnd = false;
     }
 
+    public void gamerule(String gamerule, String value) {
+        getServer().dispatchCommand(getServer().getConsoleSender(), "gamerule " + gamerule + " " + value);
+    }
+
     private void addTeam() {
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboard = scoreboardManager.getMainScoreboard();
@@ -417,6 +421,8 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onMobSpawn(EntitySpawnEvent event) {
+        gamerule("doMobSpawning", String.valueOf((Boolean) mobSpawn));
+
         if (mobSpawn) {
             if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED) {
                 if (event.getEntityType() == EntityType.ZOMBIE) {
