@@ -391,7 +391,7 @@ public class Main extends JavaPlugin implements Listener {
 
                     // 사용한 사람 기준 주변 10블록 관전자에게 People 팀으로 Join
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                        if (allplayers.getGameMode() == GameMode.SPECTATOR) {
+                        if (allplayers.getGameMode() == GameMode.SPECTATOR && spectatorTeam.hasEntry(allplayers.getName())) {
                             if (allplayers.getLocation().distance(player.getLocation()) <= respawnSpectatorRange) {
                                 allplayers.setGameMode(GameMode.SURVIVAL);
                                 spectatorTeam.removeEntry(allplayers.getName());
