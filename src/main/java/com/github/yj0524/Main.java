@@ -76,6 +76,8 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         Bukkit.getPluginManager().registerEvents(this, this);
+
+        gamerule("doMobSpawning", String.valueOf((Boolean) mobSpawn));
     }
 
     @Override
@@ -421,8 +423,6 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onMobSpawn(EntitySpawnEvent event) {
-        gamerule("doMobSpawning", String.valueOf((Boolean) mobSpawn));
-
         if (mobSpawn) {
             if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED) {
                 if (event.getEntityType() == EntityType.ZOMBIE) {
