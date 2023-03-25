@@ -13,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Random;
+
 public class PoisonousMushroom implements CommandExecutor {
 
     Main main;
@@ -129,19 +131,18 @@ public class PoisonousMushroom implements CommandExecutor {
                 }
             } else if (args[0].equals("forcehuskspawn")) {
                 if (player.isOp()) {
-                    for (Player teamPlayer : Bukkit.getOnlinePlayers()) {
-                        World world = player.getWorld();
-                        Team playerTeam = main.scoreboard.getPlayerTeam(player);
-                        if (teamPlayer != player && playerTeam.getName().equals("People")) {
-                            Location playerLocation = teamPlayer.getLocation();
+                    for (String entry : main.peopleTeam.getEntries()) {
+                        Player player1 = Bukkit.getPlayer(entry);
+                        if (player1 != null) {
                             for (int i = 0; i < main.huskCount; i++) {
-                                Location huskLocation = playerLocation.clone().add(Math.random() * 60 - 30, 0, Math.random() * 60 - 30);
-                                Husk husks = (Husk) world.spawnEntity(huskLocation, EntityType.HUSK);
-                                husks.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(main.huskHealth);
-                                husks.setHealth(main.huskHealth);
+                                Location loc = player1.getLocation().add(Math.random() * 30, 0, Math.random() * 30);
+                                Husk husk = (Husk) loc.getWorld().spawnEntity(loc, EntityType.HUSK);
+                                husk.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(main.huskHealth);
+                                husk.setHealth(main.huskHealth);
                             }
                         }
                     }
+                    player.sendMessage("§a허스크를 소환했습니다.");
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
