@@ -99,6 +99,12 @@ public class UtilTabCom implements TabCompleter {
             return result;
         }
 
+        // husktridentpercent Command
+        if (arg[0].equalsIgnoreCase("husktridentpercent")) {
+            result.clear();
+            return result;
+        }
+
         return arguments;
     }
 }
