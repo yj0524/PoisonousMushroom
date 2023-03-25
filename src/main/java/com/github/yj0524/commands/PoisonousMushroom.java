@@ -3,13 +3,18 @@ package com.github.yj0524.commands;
 import com.github.yj0524.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Husk;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Random;
 
 public class PoisonousMushroom implements CommandExecutor {
 
@@ -25,7 +30,7 @@ public class PoisonousMushroom implements CommandExecutor {
             Player allPlayers = (Player) sender;
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore>");
+                player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore, forcehuskspawn>");
             }
             // 만약 arg[0]이 gameend라면 "관리자가 게임을 종료했습니다." 라는 SubTitle과 함께 게임 종료
             else if (args[0].equals("gameend")) {
@@ -125,8 +130,20 @@ public class PoisonousMushroom implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+                // forcehuskspawn
+            } else if (args[0].equals("forcehuskspawn")) {
+                if (player.isOp()) {
+                    for (int i = 0; i < main.huskCount; i++) {
+                        Location location = player.getLocation();
+                        location.add(new Random().nextInt(30), 0, new Random().nextInt(30));
+                        Husk husk = (Husk) location.getWorld().spawnEntity(location, EntityType.HUSK);
+                        husk.setHealth(main.huskHealth);
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore> [PlayerName (vaccine, respawnsemaphore command only)]");
+                player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore, forcehuskspawn> [PlayerName (vaccine, respawnsemaphore command only)]");
             }
         }
         return true;

@@ -18,6 +18,7 @@ public class TabCom implements TabCompleter {
             arguments.add("gameend");
             arguments.add("vaccine");
             arguments.add("respawnsemaphore");
+            arguments.add("forcehuskspawn");
         }
 
         List<String> result = new ArrayList<>();
@@ -57,6 +58,12 @@ public class TabCom implements TabCompleter {
         // respawnsemaphore Command
         if (arg[0].equalsIgnoreCase("respawnsemaphore")) {
             return null;
+        }
+
+        // forcehuskspawn Command
+        if (arg[0].equalsIgnoreCase("forcehuskspawn")) {
+            result.clear();
+            return result;
         }
 
         return arguments;
