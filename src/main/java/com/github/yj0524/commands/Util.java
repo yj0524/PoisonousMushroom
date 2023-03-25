@@ -47,7 +47,7 @@ public class Util implements CommandExecutor {
                             saveConfig();
                             player.sendMessage("§a허스크 체력을 " + main.huskHealth + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util huskhealth [double]");
+                            player.sendMessage("§c사용법 : /util huskhealth [int]");
                         }
                     }
                 } else {
@@ -177,7 +177,7 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 허스크가 삼지창을 떨어뜨릴 확률은 " + main.huskTridentPercent + "%입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.huskTridentPercent = Integer.parseInt(args[1]);
+                            main.huskTridentPercent = Double.parseDouble(args[1]);
                             saveConfig();
                             player.sendMessage("§a허스크가 삼지창을 떨어뜨릴 확률을 " + main.huskTridentPercent + "%로 설정했습니다.");
                         } catch (NumberFormatException e) {
