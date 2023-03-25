@@ -22,6 +22,7 @@
 #### mobFollowRange : 몬스터의 추적 거리를 설정합니다.
 #### respawnSpectatorRange : 부활 신호기를 사용한 사람의 반경에 있는 사망자를 부활시키는 거리를 설정합니다.
 #### mobSpawn : 몬스터 스폰 여부를 설정합니다.
+#### huskTridentPercent : 허스크를 잡았을 때, 삼지창을 드랍할 확률을 설정합니다.
 #### People 팀에 Join 되어있다면, 죽었을 때 Spectator 팀으로 Join 됨과 동시에 게임 모드가 Spectator 모드로 변경됩니다.
 #### 만일 Mushroom 팀에 Join 되어있는 플레이어가 죽었을 때는 아무 일도 일어나지 않고 Mushroom 팀에 Join 되어 있는 사람이 월드의 스폰으로 이동합니다.
 

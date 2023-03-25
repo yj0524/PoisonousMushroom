@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -45,6 +46,7 @@ public class Main extends JavaPlugin implements Listener {
     public int mobFollowRange;
     public int respawnSpectatorRange;
     public boolean mobSpawn;
+    public int huskTridentPercent;
 
     @Override
     public void onEnable() {
@@ -166,6 +168,7 @@ public class Main extends JavaPlugin implements Listener {
         mobFollowRange = config.getInt("mobFollowRange", 128);
         respawnSpectatorRange = config.getInt("respawnSpectatorRange", 10);
         mobSpawn = config.getBoolean("mobSpawn", true);
+        huskTridentPercent = config.getInt("huskTridentPercent", 1);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -175,6 +178,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("mobFollowRange", mobFollowRange);
         config.set("respawnSpectatorRange", respawnSpectatorRange);
         config.set("mobSpawn", mobSpawn);
+        config.set("huskTridentPercent", huskTridentPercent);
         saveConfig();
     }
 
@@ -485,6 +489,18 @@ public class Main extends JavaPlugin implements Listener {
             Player player = (Player) event.getTarget();
             if (mushroomTeam.hasEntry(player.getName())) {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (event.getEntityType() == EntityType.HUSK) {
+            Husk husk = (Husk) event.getEntity();
+            if (husk.getKiller() != null) {
+                if (Math.random() <= huskTridentPercent / 100) {
+                    husk.getWorld().dropItemNaturally(husk.getLocation(), new ItemStack(Material.TRIDENT));
+                }
             }
         }
     }
