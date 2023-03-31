@@ -432,6 +432,7 @@ public class Main extends JavaPlugin implements Listener {
                 if (event.getEntityType() == EntityType.ZOMBIE) {
                     Zombie zombie = (Zombie) event.getEntity();
                     zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
+                    zombie.getEquipment().setHelmet(new ItemStack(Material.STONE_BUTTON));
                 }
 
                 if (event.getEntityType() == EntityType.HUSK) {
@@ -453,15 +454,9 @@ public class Main extends JavaPlugin implements Listener {
                     }
                 }
 
-                if (event.getEntityType() == EntityType.ZOMBIE) {
-                    Zombie zombie = (Zombie) event.getEntity();
-                    zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.HUSK);
-                    zombie.remove();
-                }
-
                 if (event.getEntityType() == EntityType.HUSK) {
                     Husk husk = (Husk) event.getEntity();
-                    if (husk.isBaby()) {
+                    if (!husk.isAdult()) {
                         husk.getWorld().spawnEntity(husk.getLocation(), EntityType.HUSK);
                         husk.remove();
                     }
@@ -471,7 +466,7 @@ public class Main extends JavaPlugin implements Listener {
                     Drowned drowned = (Drowned) event.getEntity();
                     drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
                     drowned.remove();
-                    if (drowned.isBaby()) {
+                    if (!drowned.isAdult()) {
                         drowned.getWorld().spawnEntity(drowned.getLocation(), EntityType.HUSK);
                         drowned.remove();
                     }
