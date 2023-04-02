@@ -7,13 +7,11 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,6 +34,7 @@ public class Main extends JavaPlugin implements Listener {
     public Team peopleTeam;
 
     public boolean isGameEnd = false;
+    public final double[] damageMultipliers = { 1.2, 1.4, 1.6, 1.8, 2.0 };
 
     // Config.yml 파일에 들어갈 값들
     public int huskHealth;
@@ -495,6 +494,28 @@ public class Main extends JavaPlugin implements Listener {
             if (husk.getKiller() != null) {
                 if (Math.random() <= huskTridentPercent / 100) {
                     husk.getWorld().dropItemNaturally(husk.getLocation(), new ItemStack(Material.TRIDENT));
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) event.getDamager();
+        ItemStack weapon = player.getInventory().getItemInMainHand();
+
+        if (weapon.containsEnchantment(Enchantment.DAMAGE_ARTHROPODS)) {
+            int enchantmentLevel = weapon.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS);
+            double damageMultiplier = damageMultipliers[enchantmentLevel - 1];
+
+            if (event.getEntity() instanceof Player) {
+                Player target = (Player) event.getEntity();
+                if (mushroomTeam.hasEntry(target.getName())) {
+                    event.setDamage(event.getDamage() * damageMultiplier);
                 }
             }
         }
