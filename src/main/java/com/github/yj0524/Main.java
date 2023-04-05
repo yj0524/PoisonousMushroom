@@ -159,21 +159,20 @@ public class Main extends JavaPlugin implements Listener {
 
     private void loadScoreboard() {
         Objective objective;
+
         if (scoreboard.getObjective("Information") != null) {
             scoreboard.getObjective("Information").unregister();
         }
-        if (scoreboard.getObjective("Information") == null) {
-            objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        } else {
-            objective = scoreboard.getObjective("Information");
-        }
+
+        objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.WHITE + "Information");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(5);
                 objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(4);
-                objective.getScore(ChatColor.WHITE + "---------------------------").setScore(3);
+                objective.getScore(ChatColor.WHITE + " ").setScore(3);
                 objective.getScore(ChatColor.GREEN + "Version " + version).setScore(2);
                 objective.getScore(ChatColor.GREEN + "Minecraft 1.19.4").setScore(1);
                 objective.getScore(ChatColor.GREEN + "Made by yj0524_kr").setScore(0);
