@@ -18,9 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.*;
 
 import java.io.File;
 
@@ -53,8 +52,11 @@ public class Main extends JavaPlugin implements Listener {
 
         UpdateChecker.check(this, "yj0524", "PoisonousMushroom");
 
-        // 레시피 불러오기
+        addTeam();
+
         loadRecipe();
+
+        loadScoreboard();
 
         getCommand("poisonousmushroom").setExecutor(new PoisonousMushroom(this));
         getCommand("util").setExecutor(new Util(this));
@@ -65,8 +67,6 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("util").setTabCompleter(new UtilTabCom());
         getCommand("update").setTabCompleter(new UpdateTabCom());
         getCommand("configreload").setTabCompleter(new ConfigReloadTabCom());
-
-        addTeam();
 
         // Config.yml 파일 생성
         loadConfig();
@@ -154,6 +154,27 @@ public class Main extends JavaPlugin implements Listener {
         recipe2.setIngredient('D', Material.DIAMOND);
         recipe2.setIngredient('G', Material.GOLD_INGOT);
         Bukkit.addRecipe(recipe2);
+    }
+
+    private void loadScoreboard() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Objective objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
+                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(10);
+                objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(9);
+                objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(8);
+                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(7);
+                objective.getScore(ChatColor.GREEN + "남은 사람 수 : " + peopleTeam.getSize()).setScore(6);
+                objective.getScore(ChatColor.RED + "사망자 수 : " + spectatorTeam.getSize()).setScore(5);
+                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(4);
+                objective.getScore(ChatColor.GOLD + "Version Beta").setScore(3);
+                objective.getScore(ChatColor.GOLD + "Minecraft 1.19.4").setScore(2);
+                objective.getScore(ChatColor.GOLD + "Made by yj0524_kr").setScore(1);
+                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(0);
+            }
+        }.runTaskTimer(this, 0, 1);
     }
 
     public void loadConfig() {
