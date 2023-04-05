@@ -157,11 +157,16 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     private void loadScoreboard() {
+        Objective objective;
+        if (scoreboard.getObjective("Information") == null) {
+            objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        } else {
+            objective = scoreboard.getObjective("Information");
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
-                Objective objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
-                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
                 objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(10);
                 objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(9);
                 objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(8);
