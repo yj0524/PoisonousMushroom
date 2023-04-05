@@ -34,6 +34,7 @@ public class Main extends JavaPlugin implements Listener {
 
     public boolean isGameEnd = false;
     public final double[] damageMultipliers = { 1.2, 1.4, 1.6, 1.8, 2.0 };
+    public String version = getDescription().getVersion();
 
     // Config.yml 파일에 들어갈 값들
     public int huskHealth;
@@ -158,6 +159,9 @@ public class Main extends JavaPlugin implements Listener {
 
     private void loadScoreboard() {
         Objective objective;
+        if (scoreboard.getObjective("Information") != null) {
+            scoreboard.getObjective("Information").unregister();
+        }
         if (scoreboard.getObjective("Information") == null) {
             objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -167,17 +171,17 @@ public class Main extends JavaPlugin implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(10);
-                objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(9);
-                objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(8);
-                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(7);
-                objective.getScore(ChatColor.GREEN + "남은 사람 수 : " + peopleTeam.getSize()).setScore(6);
-                objective.getScore(ChatColor.RED + "사망자 수 : " + spectatorTeam.getSize()).setScore(5);
-                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(4);
-                objective.getScore(ChatColor.GOLD + "Version Beta").setScore(3);
-                objective.getScore(ChatColor.GOLD + "Minecraft 1.19.4").setScore(2);
-                objective.getScore(ChatColor.GOLD + "Made by yj0524_kr").setScore(1);
-                objective.getScore(ChatColor.WHITE + "--------------------------------").setScore(0);
+                objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(5);
+                objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(4);
+                objective.getScore(ChatColor.WHITE + "---------------------------").setScore(3);
+                objective.getScore(ChatColor.GREEN + "Version " + version).setScore(2);
+                objective.getScore(ChatColor.GREEN + "Minecraft 1.19.4").setScore(1);
+                objective.getScore(ChatColor.GREEN + "Made by yj0524_kr").setScore(0);
+                for (String entry : scoreboard.getEntries()) {
+                    if (scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(entry).getScore() < 0) {
+                        scoreboard.resetScores(entry);
+                    }
+                }
             }
         }.runTaskTimer(this, 0, 1);
     }
