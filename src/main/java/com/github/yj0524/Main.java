@@ -132,34 +132,34 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     private void loadRecipe() {
-        // 포자 퇴치기 레시피
-        ItemStack item = new ItemStack(Material.TOTEM_OF_UNDYING);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§c포자 퇴치기");
-        item.setItemMeta(meta);
-        NamespacedKey key = new NamespacedKey(this, "poison");
-        ShapedRecipe recipe = new ShapedRecipe(key, item);
-        recipe.shape("T S", " N ", "AMC");
-        recipe.setIngredient('T', Material.TRIDENT);
-        recipe.setIngredient('S', Material.MUSHROOM_STEW);
-        recipe.setIngredient('N', Material.NETHER_STAR);
-        recipe.setIngredient('A', Material.GOLDEN_APPLE);
-        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
-        recipe.setIngredient('C', Material.GOLDEN_CARROT);
-        Bukkit.addRecipe(recipe);
-
         // 부활 신호기 레시피
-        ItemStack item2 = new ItemStack(Material.HEART_OF_THE_SEA);
-        ItemMeta meta2 = item2.getItemMeta();
-        meta2.setDisplayName("§a부활 신호기");
-        item2.setItemMeta(meta2);
-        NamespacedKey key2 = new NamespacedKey(this, "resurrection");
-        ShapedRecipe recipe2 = new ShapedRecipe(key2, item2);
+        ItemStack respawnsemaphore = new ItemStack(Material.HEART_OF_THE_SEA);
+        ItemMeta respawnsemaphoreMeta = respawnsemaphore.getItemMeta();
+        respawnsemaphoreMeta.setDisplayName("§a부활 신호기");
+        respawnsemaphore.setItemMeta(respawnsemaphoreMeta);
+        NamespacedKey key2 = new NamespacedKey(this, "respawnsemaphore");
+        ShapedRecipe recipe2 = new ShapedRecipe(key2, respawnsemaphore);
         recipe2.shape(" I ", " D ", " G ");
         recipe2.setIngredient('I', Material.IRON_INGOT);
         recipe2.setIngredient('D', Material.DIAMOND);
         recipe2.setIngredient('G', Material.GOLD_INGOT);
         Bukkit.addRecipe(recipe2);
+
+        // 포자 퇴치기 레시피
+        ItemStack vaccine = new ItemStack(Material.TOTEM_OF_UNDYING);
+        ItemMeta vaccineMeta = vaccine.getItemMeta();
+        vaccineMeta.setDisplayName("§c포자 퇴치기");
+        vaccine.setItemMeta(vaccineMeta);
+        NamespacedKey key = new NamespacedKey(this, "vaccine");
+        ShapedRecipe recipe = new ShapedRecipe(key, vaccine);
+        recipe.shape("T S", " N ", "AMC");
+        recipe.setIngredient('T', Material.TRIDENT);
+        recipe.setIngredient('S', Material.MUSHROOM_STEW);
+        recipe.setIngredient('N', new ItemStack(respawnsemaphore));
+        recipe.setIngredient('A', Material.GOLDEN_APPLE);
+        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
+        recipe.setIngredient('C', Material.GOLDEN_CARROT);
+        Bukkit.addRecipe(recipe);
     }
 
     private void setWorldBorder() {
