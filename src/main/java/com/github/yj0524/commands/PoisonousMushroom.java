@@ -27,6 +27,19 @@ public class PoisonousMushroom implements CommandExecutor {
             Player player = (Player) sender;
             if (args.length == 0) {
                 player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore, forcehuskspawn>");
+            } else if (args[0].equals("gamestart")) {
+                for (String entry : main.spectatorTeam.getEntries()) {
+                    Player player1 = Bukkit.getPlayer(entry);
+                    if (player1 != null) {
+                        if (player1.getName().toString() != main.mushroomPlayerName) {
+                            player1.setGameMode(GameMode.SURVIVAL);
+                            main.peopleTeam.addEntry(player1.getName());
+                        }
+                    }
+                }
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    allplayers.sendTitle("§a게임 시작", "§a관리자가 게임을 시작했습니다.");
+                }
             } else if (args[0].equals("gameend")) {
                 if (player.isOp()) {
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
@@ -54,19 +67,6 @@ public class PoisonousMushroom implements CommandExecutor {
                     main.isGameEnd = true;
                 } else {
                     player.sendMessage("§c권한이 없습니다.");
-                }
-            } else if (args[0].equals("gamestart")) {
-                for (String entry : main.spectatorTeam.getEntries()) {
-                    Player player1 = Bukkit.getPlayer(entry);
-                    if (player1 != null) {
-                        if (player1.getName().toString() != main.mushroomPlayerName) {
-                            player1.setGameMode(GameMode.SURVIVAL);
-                            main.peopleTeam.addEntry(player1.getName());
-                        }
-                    }
-                }
-                for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                    allplayers.sendTitle("§a게임 시작", "§a관리자가 게임을 시작했습니다.");
                 }
             } else if (args[0].equals("vaccine")) {
                 if (player.isOp()) {

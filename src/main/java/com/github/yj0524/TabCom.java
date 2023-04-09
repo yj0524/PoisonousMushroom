@@ -15,6 +15,7 @@ public class TabCom implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] arg) {
         if (arguments.isEmpty()) {
             arguments.add("help");
+            arguments.add("gamestart");
             arguments.add("gameend");
             arguments.add("vaccine");
             arguments.add("respawnsemaphore");
@@ -40,6 +41,12 @@ public class TabCom implements TabCompleter {
 
         // help Command
         if (arg[0].equalsIgnoreCase("help")) {
+            result.clear();
+            return result;
+        }
+
+        // gamestart Command
+        if (arg[0].equalsIgnoreCase("gamestart")) {
             result.clear();
             return result;
         }
