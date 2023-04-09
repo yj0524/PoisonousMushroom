@@ -24,6 +24,9 @@ public class Util implements CommandExecutor {
         main.getConfig().set("respawnSpectatorRange", main.respawnSpectatorRange);
         main.getConfig().set("mobSpawn", main.mobSpawn);
         main.getConfig().set("huskTridentPercent", main.huskTridentPercent);
+        main.getConfig().set("worldBorderSize", main.worldBorderSize);
+        main.getConfig().set("worldBorderEnable", main.worldBorderEnable);
+        main.getConfig().set("endGateway", main.endGateway);
         main.saveConfig();
     }
 
@@ -36,7 +39,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn> [bool (serverautoshutdown, mobspawn command only), int (huskhealth, huskcount, servershutdowntick, mobfollowrange, respawnspectatorrange, husktridentpercent command only), string (mushroomplayername command only), double (husktridentpercent command only)]");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway>");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -187,8 +190,68 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("worldbordersize")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 월드 보더 크기는 " + main.worldBorderSize + "입니다.");
+                    } else if (args.length == 2) {
+                        try {
+                            main.worldBorderSize = Integer.parseInt(args[1]);
+                            saveConfig();
+                            player.sendMessage("§a월드 보더 크기를 " + main.worldBorderSize + "으로 설정했습니다.");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§c사용법 : /util worldbordersize [int]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("worldborderenable")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 월드 보더 활성화 여부는 " + main.worldBorderEnable + "입니다.");
+                    } else if (args.length == 2) {
+                        if (args[1].equals("true")) {
+                            main.worldBorderEnable = true;
+                            saveConfig();
+                            gamerule("doImmediateRespawn", String.valueOf((Boolean) main.worldBorderEnable));
+                            player.sendMessage("§a월드 보더 활성화 여부를 활성화했습니다.");
+                        } else if (args[1].equals("false")) {
+                            main.worldBorderEnable = false;
+                            saveConfig();
+                            gamerule("doImmediateRespawn", String.valueOf((Boolean) main.worldBorderEnable));
+                            player.sendMessage("§a월드 보더 활성화 여부를 비활성화했습니다.");
+                        } else {
+                            player.sendMessage("§c사용법 : /util worldborderenable [bool]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("endgateway")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 엔드 게이트웨이 활성화 여부는 " + main.endGateway + "입니다.");
+                    } else if (args.length == 2) {
+                        if (args[1].equals("true")) {
+                            main.endGateway = true;
+                            saveConfig();
+                            gamerule("doImmediateRespawn", String.valueOf((Boolean) main.endGateway));
+                            player.sendMessage("§a엔드 게이트웨이 활성화 여부를 활성화했습니다.");
+                        } else if (args[1].equals("false")) {
+                            main.endGateway = false;
+                            saveConfig();
+                            gamerule("doImmediateRespawn", String.valueOf((Boolean) main.endGateway));
+                            player.sendMessage("§a엔드 게이트웨이 활성화 여부를 비활성화했습니다.");
+                        } else {
+                            player.sendMessage("§c사용법 : /util endgateway [bool]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent> [bool (serverautoshutdown, mobspawn command only), int (huskhealth, huskcount, servershutdowntick, mobfollowrange, respawnspectatorrange command only), string (mushroomplayername command only), double (husktridentpercent command only)]");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway>");
             }
         }
         return true;

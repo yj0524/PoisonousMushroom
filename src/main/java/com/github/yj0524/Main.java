@@ -4,6 +4,8 @@ import com.github.yj0524.commands.*;
 import com.github.yj0524.util.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.EndGateway;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,18 +48,15 @@ public class Main extends JavaPlugin implements Listener {
     public int respawnSpectatorRange;
     public boolean mobSpawn;
     public double huskTridentPercent;
+    public int worldBorderSize;
+    public boolean worldBorderEnable;
+    public boolean endGateway;
 
     @Override
     public void onEnable() {
         getLogger().info("Plugin Enabled");
 
         UpdateChecker.check(this, "yj0524", "PoisonousMushroom");
-
-        addTeam();
-
-        loadRecipe();
-
-        loadScoreboard();
 
         getCommand("poisonousmushroom").setExecutor(new PoisonousMushroom(this));
         getCommand("util").setExecutor(new Util(this));
@@ -76,6 +75,12 @@ public class Main extends JavaPlugin implements Listener {
             getConfig().options().copyDefaults(true);
             saveConfig();
         }
+
+        addTeam();
+        loadRecipe();
+        loadScoreboard();
+        setWorldBorder();
+        endGateway();
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -157,6 +162,40 @@ public class Main extends JavaPlugin implements Listener {
         Bukkit.addRecipe(recipe2);
     }
 
+    private void setWorldBorder() {
+        if (worldBorderEnable) {
+            WorldBorder worldBorder_over = getServer().getWorld("world").getWorldBorder();
+            worldBorder_over.setCenter(0, 0);
+            worldBorder_over.setSize(worldBorderSize);
+
+            WorldBorder worldBorder_nether = getServer().getWorld("world_nether").getWorldBorder();
+            worldBorder_nether.setCenter(0, 0);
+            worldBorder_nether.setSize(worldBorderSize);
+
+            WorldBorder worldBorder_end = getServer().getWorld("world_the_end").getWorldBorder();
+            worldBorder_end.setCenter(0, 0);
+            worldBorder_end.setSize(512);
+        }
+    }
+
+    private void endGateway() {
+        if (endGateway) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    World world = getServer().getWorld("world_the_end");
+                    for (Chunk chunk : world.getLoadedChunks()) {
+                        for (BlockState blockState : chunk.getTileEntities()) {
+                            if (blockState instanceof EndGateway) {
+                                blockState.getBlock().setType(Material.AIR);
+                            }
+                        }
+                    }
+                }
+            }.runTaskTimer(Main.this, 0, 1);
+        }
+    }
+
     private void loadScoreboard() {
         Objective objective;
 
@@ -197,6 +236,9 @@ public class Main extends JavaPlugin implements Listener {
         respawnSpectatorRange = config.getInt("respawnSpectatorRange", 10);
         mobSpawn = config.getBoolean("mobSpawn", true);
         huskTridentPercent = config.getDouble("huskTridentPercent", 10.0);
+        worldBorderSize = config.getInt("worldBorderSize", 2048);
+        worldBorderEnable = config.getBoolean("worldBorderEnable", true);
+        endGateway = config.getBoolean("endGateway", true);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -207,6 +249,9 @@ public class Main extends JavaPlugin implements Listener {
         config.set("respawnSpectatorRange", respawnSpectatorRange);
         config.set("mobSpawn", mobSpawn);
         config.set("huskTridentPercent", huskTridentPercent);
+        config.set("worldBorderSize", worldBorderSize);
+        config.set("worldBorderEnable", worldBorderEnable);
+        config.set("endGateway", endGateway);
         saveConfig();
     }
 

@@ -24,6 +24,9 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("respawnspectatorrange");
             arguments.add("mobspawn");
             arguments.add("husktridentpercent");
+            arguments.add("worldbordersize");
+            arguments.add("worldborderenable");
+            arguments.add("endgateway");
         }
 
         List<String> result = new ArrayList<>();
@@ -102,6 +105,26 @@ public class UtilTabCom implements TabCompleter {
         // husktridentpercent Command
         if (arg[0].equalsIgnoreCase("husktridentpercent")) {
             result.clear();
+            return result;
+        }
+
+        // worldbordersize Command
+        if (arg[0].equalsIgnoreCase("worldbordersize")) {
+            result.clear();
+            return result;
+        }
+
+        // worldborderenable Command
+        if (arg[0].equalsIgnoreCase("worldborderenable")) {
+            result.add("true");
+            result.add("false");
+            return result;
+        }
+
+        // endgateway Command
+        if (arg[0].equalsIgnoreCase("endgateway")) {
+            result.add("true");
+            result.add("false");
             return result;
         }
 
