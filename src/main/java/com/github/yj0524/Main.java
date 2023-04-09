@@ -151,12 +151,12 @@ public class Main extends JavaPlugin implements Listener {
         respawnsemaphoreMeta.setDisplayName("§a부활 신호기");
         respawnsemaphore.setItemMeta(respawnsemaphoreMeta);
         NamespacedKey key2 = new NamespacedKey(this, "respawnsemaphore");
-        ShapedRecipe recipe2 = new ShapedRecipe(key2, respawnsemaphore);
-        recipe2.shape(" I ", " D ", " G ");
-        recipe2.setIngredient('I', Material.IRON_INGOT);
-        recipe2.setIngredient('D', Material.DIAMOND);
-        recipe2.setIngredient('G', Material.GOLD_INGOT);
-        Bukkit.addRecipe(recipe2);
+        ShapedRecipe respawnsemaphoreRecipe = new ShapedRecipe(key2, respawnsemaphore);
+        respawnsemaphoreRecipe.shape(" I ", " D ", " G ");
+        respawnsemaphoreRecipe.setIngredient('I', Material.IRON_INGOT);
+        respawnsemaphoreRecipe.setIngredient('D', Material.DIAMOND);
+        respawnsemaphoreRecipe.setIngredient('G', Material.GOLD_INGOT);
+        Bukkit.addRecipe(respawnsemaphoreRecipe);
 
         // 포자 퇴치기 레시피
         ItemStack vaccine = new ItemStack(Material.TOTEM_OF_UNDYING);
@@ -164,15 +164,15 @@ public class Main extends JavaPlugin implements Listener {
         vaccineMeta.setDisplayName("§c포자 퇴치기");
         vaccine.setItemMeta(vaccineMeta);
         NamespacedKey key = new NamespacedKey(this, "vaccine");
-        ShapedRecipe recipe = new ShapedRecipe(key, vaccine);
-        recipe.shape("T S", " N ", "AMC");
-        recipe.setIngredient('T', Material.TRIDENT);
-        recipe.setIngredient('S', Material.MUSHROOM_STEW);
-        recipe.setIngredient('N', new ItemStack(respawnsemaphore));
-        recipe.setIngredient('A', Material.GOLDEN_APPLE);
-        recipe.setIngredient('M', Material.GLISTERING_MELON_SLICE);
-        recipe.setIngredient('C', Material.GOLDEN_CARROT);
-        Bukkit.addRecipe(recipe);
+        ShapedRecipe vaccineRecipe = new ShapedRecipe(key, vaccine);
+        vaccineRecipe.shape("T S", " N ", "EAC");
+        vaccineRecipe.setIngredient('T', Material.TRIDENT);
+        vaccineRecipe.setIngredient('S', Material.MUSHROOM_STEW);
+        vaccineRecipe.setIngredient('N', new ItemStack(respawnsemaphore));
+        vaccineRecipe.setIngredient('E', Material.EMERALD);
+        vaccineRecipe.setIngredient('A', Material.GOLDEN_APPLE);
+        vaccineRecipe.setIngredient('C', Material.COPPER_INGOT);
+        Bukkit.addRecipe(vaccineRecipe);
     }
 
     private void setWorldBorder() {
