@@ -11,9 +11,6 @@ import org.bukkit.entity.Husk;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Team;
-
-import java.util.Random;
 
 public class PoisonousMushroom implements CommandExecutor {
 
@@ -30,11 +27,8 @@ public class PoisonousMushroom implements CommandExecutor {
             Player player = (Player) sender;
             if (args.length == 0) {
                 player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore, forcehuskspawn>");
-            }
-            // 만약 arg[0]이 gameend라면 "관리자가 게임을 종료했습니다." 라는 SubTitle과 함께 게임 종료
-            else if (args[0].equals("gameend")) {
+            } else if (args[0].equals("gameend")) {
                 if (player.isOp()) {
-                    // 모든 플레이어에게 "관리자가 게임을 종료했습니다." 라는 SubTitle을 보냄
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
                         if (main.serverAutoShutDown) {
                             // serverShutDownTick 틱 후에 서버 종료
@@ -44,7 +38,6 @@ public class PoisonousMushroom implements CommandExecutor {
                             allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
                         }
                     }
-                    // Mushroom 팀을 Spectator 팀으로 모두 Join
                     for (String entry : main.mushroomTeam.getEntries()) {
                         Player player1 = Bukkit.getPlayer(entry);
                         if (player1 != null) {
@@ -52,7 +45,6 @@ public class PoisonousMushroom implements CommandExecutor {
                             main.spectatorTeam.addEntry(player1.getName());
                         }
                     }
-                    // People 팀을 Spectator 모드로 변경
                     for (String entry : main.peopleTeam.getEntries()) {
                         Player player1 = Bukkit.getPlayer(entry);
                         if (player1 != null) {
@@ -63,9 +55,21 @@ public class PoisonousMushroom implements CommandExecutor {
                 } else {
                     player.sendMessage("§c권한이 없습니다.");
                 }
+            } else if (args[0].equals("gamestart")) {
+                for (String entry : main.spectatorTeam.getEntries()) {
+                    Player player1 = Bukkit.getPlayer(entry);
+                    if (player1 != null) {
+                        if (player1.getName().toString() != main.mushroomPlayerName) {
+                            player1.setGameMode(GameMode.SURVIVAL);
+                            main.peopleTeam.addEntry(player1.getName());
+                        }
+                    }
+                }
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    allplayers.sendTitle("§a게임 시작", "§a관리자가 게임을 시작했습니다.");
+                }
             } else if (args[0].equals("vaccine")) {
                 if (player.isOp()) {
-                    // arg[1]이 없을 경우
                     if (args.length == 1) {
                         ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
                         ItemMeta totemMeta = totem.getItemMeta();
@@ -74,7 +78,6 @@ public class PoisonousMushroom implements CommandExecutor {
                         player.getInventory().addItem(totem);
                         player.sendMessage("§a포자 퇴치기를 지급했습니다.");
                     }
-                    // arg[1]이 PlayerName일 경우
                     else if (args.length == 2) {
                         Player target = Bukkit.getPlayer(args[1]);
                         if (target != null) {
@@ -98,7 +101,6 @@ public class PoisonousMushroom implements CommandExecutor {
                 }
             } else if (args[0].equals("respawnsemaphore")) {
                 if (player.isOp()) {
-                    // arg[1]이 없을 경우
                     if (args.length == 1) {
                         ItemStack totem = new ItemStack(Material.HEART_OF_THE_SEA);
                         ItemMeta totemMeta = totem.getItemMeta();
@@ -107,7 +109,6 @@ public class PoisonousMushroom implements CommandExecutor {
                         player.getInventory().addItem(totem);
                         player.sendMessage("§a부활 신호기를 지급했습니다.");
                     }
-                    // arg[1]이 PlayerName일 경우
                     else if (args.length == 2) {
                         Player target = Bukkit.getPlayer(args[1]);
                         if (target != null) {
