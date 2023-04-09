@@ -20,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
@@ -81,6 +83,17 @@ public class Main extends JavaPlugin implements Listener {
         loadScoreboard();
         setWorldBorder();
         endGateway();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (OfflinePlayer player : mushroomTeam.getPlayers()) {
+                    if (player.isOnline()) {
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0, 20);
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -277,6 +290,14 @@ public class Main extends JavaPlugin implements Listener {
         Player player = event.getEntity();
         World world = player.getWorld();
         Team playerTeam = scoreboard.getPlayerTeam(player);
+
+        // Mushroom 팀에 있는 사람이 죽었다면
+        if (playerTeam != null && playerTeam.getName().equals("Mushroom")) {
+            String message = "§a버섯이 죽었습니다! 버섯이 스폰으로 돌아갔습니다!";
+            for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                allplayers.sendMessage(message);
+            }
+        }
 
         // People 팀에 있는 사람이 죽었다면
         if (playerTeam != null && playerTeam.getName().equals("People")) {
