@@ -203,7 +203,7 @@ public class Main extends JavaPlugin implements Listener {
             scoreboard.getObjective("Information").unregister();
         }
 
-        objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.WHITE + "Information");
+        objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         new BukkitRunnable() {
