@@ -54,4 +54,5 @@
 
 ## Special Thanks
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="256" height="256"/>
+
 Open Source License Support by JetBrains
