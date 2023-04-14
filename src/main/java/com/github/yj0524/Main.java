@@ -185,14 +185,16 @@ public class Main extends JavaPlugin implements Listener {
             worldBorder_nether.setCenter(0, 0);
             worldBorder_nether.setSize(worldBorderSize);
 
-            WorldBorder worldBorder_end = getServer().getWorld("world_the_end").getWorldBorder();
-            worldBorder_end.setCenter(0, 0);
-            worldBorder_end.setSize(512);
+            if (!endGateway) {
+                WorldBorder worldBorder_end = getServer().getWorld("world_the_end").getWorldBorder();
+                worldBorder_end.setCenter(0, 0);
+                worldBorder_end.setSize(512);
+            }
         }
     }
 
     private void endGateway() {
-        if (endGateway) {
+        if (!endGateway) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -246,7 +248,7 @@ public class Main extends JavaPlugin implements Listener {
         huskTridentPercent = config.getDouble("huskTridentPercent", 10.0);
         worldBorderSize = config.getInt("worldBorderSize", 2048);
         worldBorderEnable = config.getBoolean("worldBorderEnable", true);
-        endGateway = config.getBoolean("endGateway", true);
+        endGateway = config.getBoolean("endGateway", false);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
