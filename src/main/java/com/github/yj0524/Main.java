@@ -4,6 +4,7 @@ import com.github.yj0524.commands.*;
 import com.github.yj0524.util.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EndGateway;
 import org.bukkit.command.Command;
@@ -14,8 +15,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -82,7 +82,6 @@ public class Main extends JavaPlugin implements Listener {
         loadRecipe();
         loadScoreboard();
         setWorldBorder();
-        endGateway();
 
         new BukkitRunnable() {
             @Override
@@ -190,24 +189,6 @@ public class Main extends JavaPlugin implements Listener {
                 worldBorder_end.setCenter(0, 0);
                 worldBorder_end.setSize(512);
             }
-        }
-    }
-
-    private void endGateway() {
-        if (!endGateway) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    World world = getServer().getWorld("world_the_end");
-                    for (Chunk chunk : world.getLoadedChunks()) {
-                        for (BlockState blockState : chunk.getTileEntities()) {
-                            if (blockState instanceof EndGateway) {
-                                blockState.getBlock().setType(Material.AIR);
-                            }
-                        }
-                    }
-                }
-            }.runTaskTimer(Main.this, 0, 1);
         }
     }
 
@@ -608,6 +589,29 @@ public class Main extends JavaPlugin implements Listener {
                 Player target = (Player) event.getEntity();
                 if (mushroomTeam.hasEntry(target.getName())) {
                     event.setDamage(event.getDamage() * damageMultiplier);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+
+        for (int x = playerLocation.getBlockX() - 1; x <= playerLocation.getBlockX() + 1; x++) {
+            for (int y = playerLocation.getBlockY() - 1; y <= playerLocation.getBlockY() + 1; y++) {
+                for (int z = playerLocation.getBlockZ() - 1; z <= playerLocation.getBlockZ() + 1; z++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (block.getType() == Material.END_GATEWAY) {
+                        player.teleport(new Location(world, 0, 75, 0));
+                        player.sendMessage("§c이 서버에서는 엔드 게이트웨이를 사용할 수 없습니다!");
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, -1, 0));
+                        Bukkit.getScheduler().runTaskLater(this, () -> {
+                            player.removePotionEffect(PotionEffectType.SLOW_FALLING);
+                        }, 100);
+                    }
                 }
             }
         }
