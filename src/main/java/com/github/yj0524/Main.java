@@ -13,6 +13,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -68,12 +69,14 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("update").setExecutor(new Update(this));
         getCommand("configreload").setExecutor(new ConfigReload(this));
         getCommand("evolve").setExecutor(new Evolve(this));
+        getCommand("attach").setExecutor(new Attach(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
         getCommand("update").setTabCompleter(new UpdateTabCom());
         getCommand("configreload").setTabCompleter(new ConfigReloadTabCom());
         getCommand("evolve").setTabCompleter(new EvolveTabCom());
+        getCommand("attach").setTabCompleter(new AttachTabCom());
 
         // Config.yml 파일 생성
         loadConfig();
@@ -94,6 +97,7 @@ public class Main extends JavaPlugin implements Listener {
                 for (OfflinePlayer player : mushroomTeam.getPlayers()) {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, -1, 0, false, false));
                         player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(mushroomHealth);
                     }
                 }
@@ -101,6 +105,7 @@ public class Main extends JavaPlugin implements Listener {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, -1, 1, false, false));
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, -1, 0, false, false));
                         player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(superMushroomHealth);
                     }
                 }
@@ -662,6 +667,39 @@ public class Main extends JavaPlugin implements Listener {
         if (event.getTarget() != null) {
             if (mushroomTeam.hasEntry(event.getTarget().getName()) || superMushroomTeam.hasEntry(event.getTarget().getName())) {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onCraftItem(CraftItemEvent event) {
+        if (mushroomTeam.hasEntry(event.getWhoClicked().getName())) {
+            if (event.getRecipe().getResult().getType() == Material.DIAMOND_SWORD || event.getRecipe().getResult().getType() == Material.DIAMOND_PICKAXE || event.getRecipe().getResult().getType() == Material.DIAMOND_AXE || event.getRecipe().getResult().getType() == Material.DIAMOND_SHOVEL || event.getRecipe().getResult().getType() == Material.DIAMOND_HOE || event.getRecipe().getResult().getType() == Material.DIAMOND_HELMET || event.getRecipe().getResult().getType() == Material.DIAMOND_CHESTPLATE || event.getRecipe().getResult().getType() == Material.DIAMOND_LEGGINGS || event.getRecipe().getResult().getType() == Material.DIAMOND_BOOTS) {
+                event.getWhoClicked().sendMessage("§c버섯은 다이아몬드 도구, 갑옷 제작이 불가능합니다!");
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByMushroom(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player player = (Player) event.getDamager();
+            if (mushroomTeam.hasEntry(player.getName())) {
+                if (event.getEntity() instanceof Player) {
+                    Player target = (Player) event.getEntity();
+                    if (peopleTeam.hasEntry(target.getName())) {
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 3, 0, false, false));
+                    }
+                }
+            }
+            else if (superMushroomTeam.hasEntry(player.getName())) {
+                if (event.getEntity() instanceof Player) {
+                    Player target = (Player) event.getEntity();
+                    if (peopleTeam.hasEntry(target.getName())) {
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 5, 0, false, false));
+                    }
+                }
             }
         }
     }

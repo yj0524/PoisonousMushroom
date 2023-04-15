@@ -50,7 +50,7 @@ public class PoisonousMushroom implements CommandExecutor {
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
                         if (main.serverAutoShutDown) {
                             // serverShutDownTick 틱 후에 서버 종료
-                            allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다." + (main.serverShutDownTick / 20) + "초 후에 서버가 종료됩니다.");
+                            allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다. " + (main.serverShutDownTick / 20) + "초 후에 서버가 종료됩니다.");
                             Bukkit.getScheduler().runTaskLater(main, () -> Bukkit.getServer().shutdown(), main.serverShutDownTick + 200);
                         } else {
                             allplayers.sendTitle("§c게임 종료", "§a관리자가 게임을 종료했습니다.");
