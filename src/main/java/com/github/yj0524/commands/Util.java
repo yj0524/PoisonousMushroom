@@ -27,6 +27,9 @@ public class Util implements CommandExecutor {
         main.getConfig().set("worldBorderSize", main.worldBorderSize);
         main.getConfig().set("worldBorderEnable", main.worldBorderEnable);
         main.getConfig().set("endGateway", main.endGateway);
+        main.getConfig().set("randomSpawn", main.randomSpawn);
+        main.getConfig().set("peopleHealth", main.peopleHealth);
+        main.getConfig().set("mushroomHealth", main.mushroomHealth);
         main.saveConfig();
     }
 
@@ -39,7 +42,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn>");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth>");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -272,8 +275,40 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("peoplehealth")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 생존자의 체력은 " + main.peopleHealth + "입니다.");
+                    } else if (args.length == 2) {
+                        try {
+                            main.peopleHealth = Double.parseDouble(args[1]);
+                            saveConfig();
+                            player.sendMessage("§a생존자의 체력을 " + main.peopleHealth + "으로 설정했습니다.");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§c사용법 : /util peopleHealth [double]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("mushroomhealth")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 버섯의 체력은 " + main.mushroomHealth + "입니다.");
+                    } else if (args.length == 2) {
+                        try {
+                            main.mushroomHealth = Double.parseDouble(args[1]);
+                            saveConfig();
+                            player.sendMessage("§a버섯의 체력을 " + main.mushroomHealth + "으로 설정했습니다.");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§c사용법 : /util mushroomHealth [double]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn>");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth>");
             }
         }
         return true;

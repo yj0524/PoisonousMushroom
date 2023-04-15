@@ -28,6 +28,8 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("worldborderenable");
             arguments.add("endgateway");
             arguments.add("randomspawn");
+            arguments.add("peoplehealth");
+            arguments.add("mushroomhealth");
         }
 
         List<String> result = new ArrayList<>();
@@ -133,6 +135,18 @@ public class UtilTabCom implements TabCompleter {
         if (arg[0].equalsIgnoreCase("randomspawn")) {
             result.add("true");
             result.add("false");
+            return result;
+        }
+
+        // peoplehealth Command
+        if (arg[0].equalsIgnoreCase("peoplehealth")) {
+            result.clear();
+            return result;
+        }
+
+        // mushroomhealth Command
+        if (arg[0].equalsIgnoreCase("mushroomhealth")) {
+            result.clear();
             return result;
         }
 

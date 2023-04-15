@@ -29,6 +29,8 @@
 #### worldBorderEnable : 월드 보더의 활성화 여부를 설정합니다.
 #### endGateway : 엔드 게이트웨이 생성 여부를 설정합니다.
 #### randomSpawn : 랜덤 스폰 여부를 설정합니다.
+#### peopleHealth : 생존자의 체력을 설정합니다.
+#### mushroomHealth : 버섯의 체력을 설정합니다.
 #### People 팀에 Join 되어있다면, 죽었을 때 Spectator 팀으로 Join 됨과 동시에 게임 모드가 Spectator 모드로 변경됩니다.
 #### 만일 Mushroom 팀에 Join 되어있는 플레이어가 죽었을 때는 아무 일도 일어나지 않고 Mushroom 팀에 Join 되어 있는 사람이 월드의 스폰으로 이동합니다.
 

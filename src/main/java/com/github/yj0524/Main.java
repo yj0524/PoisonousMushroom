@@ -24,7 +24,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
 import java.io.File;
-import java.util.Random;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -53,6 +52,8 @@ public class Main extends JavaPlugin implements Listener {
     public boolean worldBorderEnable;
     public boolean endGateway;
     public boolean randomSpawn;
+    public double peopleHealth;
+    public double mushroomHealth;
 
     @Override
     public void onEnable() {
@@ -89,6 +90,12 @@ public class Main extends JavaPlugin implements Listener {
                 for (OfflinePlayer player : mushroomTeam.getPlayers()) {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
+                        player.getPlayer().setHealth(mushroomHealth);
+                    }
+                }
+                for (OfflinePlayer player : peopleTeam.getPlayers()) {
+                    if (player.isOnline()) {
+                        player.getPlayer().setHealth(peopleHealth);
                     }
                 }
             }
@@ -231,6 +238,8 @@ public class Main extends JavaPlugin implements Listener {
         worldBorderEnable = config.getBoolean("worldBorderEnable", true);
         endGateway = config.getBoolean("endGateway", false);
         randomSpawn = config.getBoolean("randomSpawn", true);
+        peopleHealth = config.getDouble("peopleHealth", 20.0);
+        mushroomHealth = config.getDouble("mushroomHealth", 20.0);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -245,6 +254,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("worldBorderEnable", worldBorderEnable);
         config.set("endGateway", endGateway);
         config.set("randomSpawn", randomSpawn);
+        config.set("peopleHealth", peopleHealth);
         saveConfig();
     }
 
