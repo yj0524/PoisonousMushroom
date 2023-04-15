@@ -32,6 +32,7 @@ public class Main extends JavaPlugin implements Listener {
 
     public Team spectatorTeam;
     public Team mushroomTeam;
+    public Team superMushroomTeam;
     public Team peopleTeam;
 
     public boolean isGameEnd = false;
@@ -54,6 +55,7 @@ public class Main extends JavaPlugin implements Listener {
     public boolean randomSpawn;
     public double peopleHealth;
     public double mushroomHealth;
+    public double superMushroomHealth;
 
     @Override
     public void onEnable() {
@@ -65,11 +67,13 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("util").setExecutor(new Util(this));
         getCommand("update").setExecutor(new Update(this));
         getCommand("configreload").setExecutor(new ConfigReload(this));
+        getCommand("evolve").setExecutor(new Evolve(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
         getCommand("update").setTabCompleter(new UpdateTabCom());
         getCommand("configreload").setTabCompleter(new ConfigReloadTabCom());
+        getCommand("evolve").setTabCompleter(new EvolveTabCom());
 
         // Config.yml 파일 생성
         loadConfig();
@@ -91,6 +95,12 @@ public class Main extends JavaPlugin implements Listener {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
                         player.getPlayer().setHealth(mushroomHealth);
+                    }
+                }
+                for (OfflinePlayer player : superMushroomTeam.getPlayers()) {
+                    if (player.isOnline()) {
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
+                        player.getPlayer().setHealth(superMushroomHealth);
                     }
                 }
                 for (OfflinePlayer player : peopleTeam.getPlayers()) {
@@ -138,6 +148,15 @@ public class Main extends JavaPlugin implements Listener {
             mushroomTeam.setAllowFriendlyFire(false);
         } else {
             mushroomTeam = scoreboard.getTeam("Mushroom");
+        }
+
+        if (scoreboard.getTeam("SuperMushroom") == null) {
+            superMushroomTeam = scoreboard.registerNewTeam("SuperMushroom");
+            superMushroomTeam.setDisplayName("SuperMushroom");
+            superMushroomTeam.setPrefix(ChatColor.RED + "[SuperMushroom] ");
+            superMushroomTeam.setAllowFriendlyFire(false);
+        } else {
+            superMushroomTeam = scoreboard.getTeam("SuperMushroom");
         }
 
         if (scoreboard.getTeam("People") == null) {
@@ -240,6 +259,7 @@ public class Main extends JavaPlugin implements Listener {
         randomSpawn = config.getBoolean("randomSpawn", true);
         peopleHealth = config.getDouble("peopleHealth", 20.0);
         mushroomHealth = config.getDouble("mushroomHealth", 20.0);
+        superMushroomHealth = config.getDouble("superMushroomHealth", 40.0);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -255,6 +275,8 @@ public class Main extends JavaPlugin implements Listener {
         config.set("endGateway", endGateway);
         config.set("randomSpawn", randomSpawn);
         config.set("peopleHealth", peopleHealth);
+        config.set("mushroomHealth", mushroomHealth);
+        config.set("superMushroomHealth", superMushroomHealth);
         saveConfig();
     }
 
@@ -263,7 +285,7 @@ public class Main extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
 
         // mushroomPlayerName이라는 닉네임이면 Mushroom 팀에 Join하고, 아니면 People 팀에 Join
-        if (player.getName().equals(mushroomPlayerName)) {
+        if (player.getName().equals(mushroomPlayerName) && !superMushroomTeam.hasEntry(player.getName())) {
             if (!mushroomTeam.hasEntry(player.getName())) {
                 mushroomTeam.addEntry(player.getName());
                 player.setGameMode(GameMode.SURVIVAL);
@@ -287,14 +309,20 @@ public class Main extends JavaPlugin implements Listener {
         Team playerTeam = scoreboard.getPlayerTeam(player);
 
         // Mushroom 팀에 있는 사람이 죽었다면
-        if (playerTeam != null && playerTeam.getName().equals("Mushroom")) {
-            String message = "§a버섯이 죽었습니다! 버섯이 월드의 스폰으로 이동했습니다!";
-            for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                allplayers.sendMessage(message);
+        if (playerTeam != null) {
+            if (playerTeam.getName().equals("Mushroom") || playerTeam.getName().equals("SuperMushroom")) {
+                String message = "§a버섯이 죽었습니다! 버섯이 월드의 스폰으로 이동했습니다!";
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    allplayers.sendMessage(message);
+                }
             }
         }
 
-        if (playerTeam != null && playerTeam.getName().equals("Mushroom")) return;
+        if (playerTeam != null) {
+            if (playerTeam.getName().equals("Mushroom") || playerTeam.getName().equals("SuperMushroom")) {
+                return;
+            }
+        }
 
         // People 팀에 있는 사람이 죽었다면
         if (playerTeam != null && playerTeam.getName().equals("People")) {
@@ -389,7 +417,7 @@ public class Main extends JavaPlugin implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item != null && item.getType() == Material.TOTEM_OF_UNDYING) {
             if (item.getItemMeta().getDisplayName().equals("§c포자 퇴치기")) {
-                if (!mushroomTeam.hasEntry(player.getName())) {
+                if (!mushroomTeam.hasEntry(player.getName()) || !superMushroomTeam.hasEntry(player.getName())) {
                     // 사용 후, 아이템 삭제
                     player.getInventory().setItemInMainHand(null);
 
@@ -466,7 +494,7 @@ public class Main extends JavaPlugin implements Listener {
 
         else if (item != null && item.getType() == Material.HEART_OF_THE_SEA) {
             if (item.getItemMeta().getDisplayName().equals("§a부활 신호기")) {
-                if (!mushroomTeam.hasEntry(player.getName())) {
+                if (!mushroomTeam.hasEntry(player.getName()) || !superMushroomTeam.hasEntry(player.getName())) {
                     // 사용 후, 아이템 삭제
                     player.getInventory().setItemInMainHand(null);
 
@@ -630,8 +658,10 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
-        if (event.getTarget() != null && mushroomTeam.hasEntry(event.getTarget().getName())) {
-            event.setCancelled(true);
+        if (event.getTarget() != null) {
+            if (mushroomTeam.hasEntry(event.getTarget().getName()) || superMushroomTeam.hasEntry(event.getTarget().getName())) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -639,7 +669,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (mushroomTeam.hasEntry(player.getName())) {
+            if (mushroomTeam.hasEntry(player.getName()) || superMushroomTeam.hasEntry(player.getName())) {
                 event.setCancelled(true);
             }
         }
