@@ -27,6 +27,7 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("worldbordersize");
             arguments.add("worldborderenable");
             arguments.add("endgateway");
+            arguments.add("randomspawn");
         }
 
         List<String> result = new ArrayList<>();
@@ -123,6 +124,13 @@ public class UtilTabCom implements TabCompleter {
 
         // endgateway Command
         if (arg[0].equalsIgnoreCase("endgateway")) {
+            result.add("true");
+            result.add("false");
+            return result;
+        }
+
+        // randomspawn Command
+        if (arg[0].equalsIgnoreCase("randomspawn")) {
             result.add("true");
             result.add("false");
             return result;

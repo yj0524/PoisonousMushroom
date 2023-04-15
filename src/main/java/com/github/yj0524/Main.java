@@ -5,8 +5,6 @@ import com.github.yj0524.util.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.EndGateway;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
 import java.io.File;
+import java.util.Random;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -53,6 +52,7 @@ public class Main extends JavaPlugin implements Listener {
     public int worldBorderSize;
     public boolean worldBorderEnable;
     public boolean endGateway;
+    public boolean randomSpawn;
 
     @Override
     public void onEnable() {
@@ -230,6 +230,7 @@ public class Main extends JavaPlugin implements Listener {
         worldBorderSize = config.getInt("worldBorderSize", 2048);
         worldBorderEnable = config.getBoolean("worldBorderEnable", true);
         endGateway = config.getBoolean("endGateway", false);
+        randomSpawn = config.getBoolean("randomSpawn", true);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -243,6 +244,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("worldBorderSize", worldBorderSize);
         config.set("worldBorderEnable", worldBorderEnable);
         config.set("endGateway", endGateway);
+        config.set("randomSpawn", randomSpawn);
         saveConfig();
     }
 
@@ -276,11 +278,13 @@ public class Main extends JavaPlugin implements Listener {
 
         // Mushroom 팀에 있는 사람이 죽었다면
         if (playerTeam != null && playerTeam.getName().equals("Mushroom")) {
-            String message = "§a버섯이 죽었습니다! 버섯이 스폰으로 돌아갔습니다!";
+            String message = "§a버섯이 죽었습니다! 버섯이 월드의 스폰으로 이동했습니다!";
             for (Player allplayers : Bukkit.getOnlinePlayers()) {
                 allplayers.sendMessage(message);
             }
         }
+
+        if (playerTeam != null && playerTeam.getName().equals("Mushroom")) return;
 
         // People 팀에 있는 사람이 죽었다면
         if (playerTeam != null && playerTeam.getName().equals("People")) {
@@ -551,16 +555,6 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onEntityTarget(EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() instanceof Player) {
-            Player player = (Player) event.getTarget();
-            if (mushroomTeam.hasEntry(player.getName())) {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntityType() == EntityType.HUSK) {
             Husk husk = (Husk) event.getEntity();
@@ -614,6 +608,25 @@ public class Main extends JavaPlugin implements Listener {
                     }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        Location location = player.getLocation();
+        World world = player.getWorld();
+
+        int x = (int) (Math.random() * worldBorderSize / 2);
+        int z = (int) (Math.random() * worldBorderSize / 2);
+        int y = world.getHighestBlockYAt(x, z);
+        event.setRespawnLocation(new Location(world, x, y, z));
+    }
+
+    @EventHandler
+    public void onEntityTarget(EntityTargetEvent event) {
+        if (event.getTarget() != null && mushroomTeam.hasEntry(event.getTarget().getName())) {
+            event.setCancelled(true);
         }
     }
 }

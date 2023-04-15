@@ -39,7 +39,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway>");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn>");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -250,8 +250,30 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("randomspawn")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 랜덤 스폰 활성화 여부는 " + main.randomSpawn + "입니다.");
+                    } else if (args.length == 2) {
+                        if (args[1].equals("true")) {
+                            main.randomSpawn = true;
+                            saveConfig();
+                            gamerule("doImmediateRespawn", String.valueOf((Boolean) main.randomSpawn));
+                            player.sendMessage("§a랜덤 스폰 활성화 여부를 활성화했습니다.");
+                        } else if (args[1].equals("false")) {
+                            main.randomSpawn = false;
+                            saveConfig();
+                            gamerule("doImmediateRespawn", String.valueOf((Boolean) main.randomSpawn));
+                            player.sendMessage("§a랜덤 스폰 활성화 여부를 비활성화했습니다.");
+                        } else {
+                            player.sendMessage("§c사용법 : /util randomspawn [bool]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway>");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn>");
             }
         }
         return true;
