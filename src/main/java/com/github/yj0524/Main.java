@@ -645,7 +645,7 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        if (mushroomTeam.hasEntry(event.getPlayer().getName())) {
+        if (mushroomTeam.hasEntry(event.getPlayer().getName()) || superMushroomTeam.hasEntry(event.getPlayer().getName())) {
             Player player = event.getPlayer();
             Location location = player.getLocation();
             World world = player.getWorld();
