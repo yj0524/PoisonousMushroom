@@ -59,6 +59,8 @@ public class Main extends JavaPlugin implements Listener {
     public double mushroomHealth;
     public double superMushroomHealth;
     public double sacrificePercent;
+    public double infectionPercent;
+    public boolean infectionEnable;
 
     @Override
     public void onEnable() {
@@ -135,6 +137,7 @@ public class Main extends JavaPlugin implements Listener {
 
         gamerule("doMobSpawning", String.valueOf((Boolean) mobSpawn));
         gamerule("fallDamage", String.valueOf(false));
+        gamerule("doImmediateRespawn", String.valueOf(true));
     }
 
     @Override
@@ -291,6 +294,8 @@ public class Main extends JavaPlugin implements Listener {
         mushroomHealth = config.getDouble("mushroomHealth", 20.0);
         superMushroomHealth = config.getDouble("superMushroomHealth", 40.0);
         sacrificePercent = config.getDouble("sacrificePercent", 30.0);
+        infectionPercent = config.getDouble("infectionPercent", 15.0);
+        infectionEnable = config.getBoolean("infectionEnable", true);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -309,6 +314,8 @@ public class Main extends JavaPlugin implements Listener {
         config.set("mushroomHealth", mushroomHealth);
         config.set("superMushroomHealth", superMushroomHealth);
         config.set("sacrificePercent", sacrificePercent);
+        config.set("infectionPercent", infectionPercent);
+        config.set("infectionEnable", infectionEnable);
         saveConfig();
     }
 
@@ -352,6 +359,21 @@ public class Main extends JavaPlugin implements Listener {
 
         if (playerTeam != null) {
             if (playerTeam.getName().equals("Mushroom") || playerTeam.getName().equals("SuperMushroom")) {
+                return;
+            }
+        }
+
+        if (infectionEnable) {
+            if (Math.random() < infectionPercent / 100) {
+                String message = "§c" + player.getName() + "님이 포자 바이러스에 감염되어 버섯으로 변했습니다! 부활 신호기의 영향을 받지 못합니다!";
+                for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                    allplayers.sendMessage(message);
+                }
+                player.setGameMode(GameMode.SURVIVAL);
+                mushroomTeam.addEntry(player.getName());
+                for (PotionEffect effect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(effect.getType());
+                }
                 return;
             }
         }

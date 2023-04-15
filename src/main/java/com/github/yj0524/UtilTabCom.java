@@ -31,6 +31,8 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("peoplehealth");
             arguments.add("mushroomhealth");
             arguments.add("sacrificepercent");
+            arguments.add("infectionpercent");
+            arguments.add("infectionenable");
         }
 
         List<String> result = new ArrayList<>();
@@ -154,6 +156,19 @@ public class UtilTabCom implements TabCompleter {
         // sacrificepercent Command
         if (arg[0].equalsIgnoreCase("sacrificepercent")) {
             result.clear();
+            return result;
+        }
+
+        // infectionpercent Command
+        if (arg[0].equalsIgnoreCase("infectionpercent")) {
+            result.clear();
+            return result;
+        }
+
+        // infectionenable Command
+        if (arg[0].equalsIgnoreCase("infectionenable")) {
+            result.add("true");
+            result.add("false");
             return result;
         }
 
