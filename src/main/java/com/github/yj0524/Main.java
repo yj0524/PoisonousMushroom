@@ -323,7 +323,7 @@ public class Main extends JavaPlugin implements Listener {
                 player.setGameMode(GameMode.SURVIVAL);
             }
         } else {
-            if (!peopleTeam.hasEntry(player.getName()) && !spectatorTeam.hasEntry(player.getName())) {
+            if (!peopleTeam.hasEntry(player.getName()) && !spectatorTeam.hasEntry(player.getName()) && !sacrificeTeam.hasEntry(player.getName())) {
                 peopleTeam.addEntry(player.getName());
             }
             else if (isGameEnd) {
@@ -588,7 +588,7 @@ public class Main extends JavaPlugin implements Listener {
                 }
 
                 for (Player allPlayers : Bukkit.getOnlinePlayers()) {
-                    if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
+                    if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && !mushroomTeam.hasEntry(String.valueOf(allPlayers)) || !superMushroomTeam.hasEntry(String.valueOf(allPlayers)) && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
                         if (event.getEntityType() == EntityType.ZOMBIE) {
                             Zombie zombie = (Zombie) event.getEntity();
                             zombie.setTarget(allPlayers);

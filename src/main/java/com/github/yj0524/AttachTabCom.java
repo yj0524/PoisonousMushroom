@@ -19,6 +19,7 @@ public class AttachTabCom implements TabCompleter {
             arguments.add("mushroom");
             arguments.add("supermushroom");
             arguments.add("spectator");
+            arguments.add("sacrifice");
         }
 
         List<String> result = new ArrayList<>();
@@ -61,6 +62,11 @@ public class AttachTabCom implements TabCompleter {
 
         // spectator Command
         if (arg[0].equalsIgnoreCase("spectator")) {
+            return null;
+        }
+
+        // sacrifice Command
+        if (arg[0].equalsIgnoreCase("sacrifice")) {
             return null;
         }
 
