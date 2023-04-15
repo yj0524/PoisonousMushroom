@@ -109,7 +109,7 @@ public class Main extends JavaPlugin implements Listener {
                     }
                 }
             }
-        }.runTaskTimer(this, 0, 20);
+        }.runTaskTimer(this, 0, 1);
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
