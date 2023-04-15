@@ -419,8 +419,8 @@ public class Main extends JavaPlugin implements Listener {
         if (item != null && item.getType() == Material.TOTEM_OF_UNDYING) {
             if (item.getItemMeta().getDisplayName().equals("§c포자 퇴치기")) {
                 if (!mushroomTeam.hasEntry(player.getName()) || !superMushroomTeam.hasEntry(player.getName())) {
-                    // 사용 후, 아이템 삭제
-                    player.getInventory().setItemInMainHand(null);
+                    // 사용 후, 아이템 1개 삭제
+                    item.setAmount(item.getAmount() - 1);
 
                     // 게임 종료
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
@@ -496,8 +496,8 @@ public class Main extends JavaPlugin implements Listener {
         else if (item != null && item.getType() == Material.HEART_OF_THE_SEA) {
             if (item.getItemMeta().getDisplayName().equals("§a부활 신호기")) {
                 if (!mushroomTeam.hasEntry(player.getName()) || !superMushroomTeam.hasEntry(player.getName())) {
-                    // 사용 후, 아이템 삭제
-                    player.getInventory().setItemInMainHand(null);
+                    // 사용 후, 아이템 1개 삭제
+                    item.setAmount(item.getAmount() - 1);
 
                     int tmpPlayer = peopleTeam.getSize();
 
