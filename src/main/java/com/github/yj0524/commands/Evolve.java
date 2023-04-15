@@ -22,7 +22,7 @@ public class Evolve implements CommandExecutor {
             main.mushroomTeam.removeEntry(sender.getName());
             main.superMushroomTeam.addEntry(sender.getName());
             for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                allplayers.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sender.getName() + "님이 슈퍼 버섯으로 진화했습니다.");
+                allplayers.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sender.getName() + "이(가) 슈퍼 버섯으로 진화했습니다!");
             }
         }
         else {
