@@ -46,22 +46,22 @@ public class AttachTabCom implements TabCompleter {
 
         // people Command
         if (arg[0].equalsIgnoreCase("people")) {
-            return result;
+            return null;
         }
 
         // mushroom Command
         if (arg[0].equalsIgnoreCase("mushroom")) {
-            return result;
+            return null;
         }
 
         // supermushroom Command
         if (arg[0].equalsIgnoreCase("supermushroom")) {
-            return result;
+            return null;
         }
 
         // spectator Command
         if (arg[0].equalsIgnoreCase("spectator")) {
-            return result;
+            return null;
         }
 
         return arguments;

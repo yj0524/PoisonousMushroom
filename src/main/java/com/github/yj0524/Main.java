@@ -32,6 +32,7 @@ public class Main extends JavaPlugin implements Listener {
     public Scoreboard scoreboard;
 
     public Team spectatorTeam;
+    public Team sacrificeTeam;
     public Team mushroomTeam;
     public Team superMushroomTeam;
     public Team peopleTeam;
@@ -57,6 +58,7 @@ public class Main extends JavaPlugin implements Listener {
     public double peopleHealth;
     public double mushroomHealth;
     public double superMushroomHealth;
+    public double sacrificePercent;
 
     @Override
     public void onEnable() {
@@ -70,6 +72,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("configreload").setExecutor(new ConfigReload(this));
         getCommand("evolve").setExecutor(new Evolve(this));
         getCommand("attach").setExecutor(new Attach(this));
+        getCommand("sacrifice").setExecutor(new Sacrifice(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
@@ -77,6 +80,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("configreload").setTabCompleter(new ConfigReloadTabCom());
         getCommand("evolve").setTabCompleter(new EvolveTabCom());
         getCommand("attach").setTabCompleter(new AttachTabCom());
+        getCommand("sacrifice").setTabCompleter(new SacrificeTabCom());
 
         // Config.yml 파일 생성
         loadConfig();
@@ -114,6 +118,16 @@ public class Main extends JavaPlugin implements Listener {
                         player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(peopleHealth);
                     }
                 }
+                for (OfflinePlayer player : spectatorTeam.getPlayers()) {
+                    if (player.isOnline()) {
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, -1, 0, false, false));
+                    }
+                }
+                for (OfflinePlayer player : sacrificeTeam.getPlayers()) {
+                    if (player.isOnline()) {
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, -1, 0, false, false));
+                    }
+                }
             }
         }.runTaskTimer(this, 0, 1);
 
@@ -138,7 +152,7 @@ public class Main extends JavaPlugin implements Listener {
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboard = scoreboardManager.getMainScoreboard();
 
-        // 팀 3개 생성
+        // 팀 생성
         if (scoreboard.getTeam("Spectator") == null) {
             spectatorTeam = scoreboard.registerNewTeam("Spectator");
             spectatorTeam.setDisplayName("Spectator");
@@ -146,6 +160,15 @@ public class Main extends JavaPlugin implements Listener {
             spectatorTeam.setAllowFriendlyFire(false);
         } else {
             spectatorTeam = scoreboard.getTeam("Spectator");
+        }
+
+        if (scoreboard.getTeam("Sacrifice") == null) {
+            sacrificeTeam = scoreboard.registerNewTeam("Sacrifice");
+            sacrificeTeam.setDisplayName("Sacrifice");
+            sacrificeTeam.setPrefix(ChatColor.RED + "[Sacrifice] ");
+            sacrificeTeam.setAllowFriendlyFire(false);
+        } else {
+            sacrificeTeam = scoreboard.getTeam("Sacrifice");
         }
 
         if (scoreboard.getTeam("Mushroom") == null) {
@@ -267,6 +290,7 @@ public class Main extends JavaPlugin implements Listener {
         peopleHealth = config.getDouble("peopleHealth", 20.0);
         mushroomHealth = config.getDouble("mushroomHealth", 20.0);
         superMushroomHealth = config.getDouble("superMushroomHealth", 40.0);
+        sacrificePercent = config.getDouble("sacrificePercent", 30.0);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -284,6 +308,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("peopleHealth", peopleHealth);
         config.set("mushroomHealth", mushroomHealth);
         config.set("superMushroomHealth", superMushroomHealth);
+        config.set("sacrificePercent", sacrificePercent);
         saveConfig();
     }
 
@@ -424,7 +449,7 @@ public class Main extends JavaPlugin implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item != null && item.getType() == Material.TOTEM_OF_UNDYING) {
             if (item.getItemMeta().getDisplayName().equals("§c포자 퇴치기")) {
-                if (!mushroomTeam.hasEntry(player.getName()) || !superMushroomTeam.hasEntry(player.getName())) {
+                if (peopleTeam.hasEntry(player.getName())) {
                     // 사용 후, 아이템 1개 삭제
                     item.setAmount(item.getAmount() - 1);
 
@@ -501,7 +526,7 @@ public class Main extends JavaPlugin implements Listener {
 
         else if (item != null && item.getType() == Material.HEART_OF_THE_SEA) {
             if (item.getItemMeta().getDisplayName().equals("§a부활 신호기")) {
-                if (!mushroomTeam.hasEntry(player.getName()) || !superMushroomTeam.hasEntry(player.getName())) {
+                if (peopleTeam.hasEntry(player.getName())) {
                     // 사용 후, 아이템 1개 삭제
                     item.setAmount(item.getAmount() - 1);
 
@@ -523,8 +548,16 @@ public class Main extends JavaPlugin implements Listener {
 
                         if (tmpPlayer == peopleTeam.getSize()) {
                             allplayers.sendMessage("§c하지만, 주변에 영혼이 없어서 부활에 실패했습니다!");
-                            allplayers.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
-                        } else allplayers.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                            allplayers.playSound(allplayers.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
+                        } else {
+                            String revivedPlayers = "";
+                            for (String revivedPlayer : peopleTeam.getEntries()) {
+                                revivedPlayers += revivedPlayer + ", ";
+                            }
+                            revivedPlayers = revivedPlayers.substring(0, revivedPlayers.length() - 2);
+                            allplayers.sendMessage("§a" + revivedPlayers + " 님이 부활했습니다!");
+                            allplayers.playSound(allplayers.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                        }
                     }
                 }
                 else {
@@ -690,7 +723,7 @@ public class Main extends JavaPlugin implements Listener {
                 if (event.getEntity() instanceof Player) {
                     Player target = (Player) event.getEntity();
                     if (peopleTeam.hasEntry(target.getName())) {
-                        target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 3, 0, false, false));
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 0, false, false));
                     }
                 }
             }
@@ -698,7 +731,7 @@ public class Main extends JavaPlugin implements Listener {
                 if (event.getEntity() instanceof Player) {
                     Player target = (Player) event.getEntity();
                     if (peopleTeam.hasEntry(target.getName())) {
-                        target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 5, 0, false, false));
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 300, 0, false, false));
                     }
                 }
             }

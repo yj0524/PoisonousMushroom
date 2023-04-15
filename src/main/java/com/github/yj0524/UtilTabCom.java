@@ -30,6 +30,7 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("randomspawn");
             arguments.add("peoplehealth");
             arguments.add("mushroomhealth");
+            arguments.add("sacrificepercent");
         }
 
         List<String> result = new ArrayList<>();
@@ -146,6 +147,12 @@ public class UtilTabCom implements TabCompleter {
 
         // mushroomhealth Command
         if (arg[0].equalsIgnoreCase("mushroomhealth")) {
+            result.clear();
+            return result;
+        }
+
+        // sacrificepercent Command
+        if (arg[0].equalsIgnoreCase("sacrificepercent")) {
             result.clear();
             return result;
         }

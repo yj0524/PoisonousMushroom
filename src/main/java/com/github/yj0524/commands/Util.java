@@ -31,6 +31,7 @@ public class Util implements CommandExecutor {
         main.getConfig().set("peopleHealth", main.peopleHealth);
         main.getConfig().set("mushroomHealth", main.mushroomHealth);
         main.getConfig().set("superMushroomHealth", main.superMushroomHealth);
+        main.getConfig().set("sacrificePercent", main.sacrificePercent);
         main.saveConfig();
     }
 
@@ -43,7 +44,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth>");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent>");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -324,8 +325,24 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("sacrificepercent")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 희생 성공 확률은 " + main.sacrificePercent + "입니다.");
+                    } else if (args.length == 2) {
+                        try {
+                            main.sacrificePercent = Double.parseDouble(args[1]);
+                            saveConfig();
+                            player.sendMessage("§a희생 성공 확률을 " + main.sacrificePercent + "으로 설정했습니다.");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§c사용법 : /util sacrificepercent [double]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth>");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent>");
             }
         }
         return true;

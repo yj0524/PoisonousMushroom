@@ -1,11 +1,19 @@
 name: PoisonousMushroom
-version: '1.4.3'
+version: '1.4.4'
 main: com.github.yj0524.Main
 api-version: 1.19
 commands:
   poisonousmushroom:
+    permission: op
   util:
+    permission: op
   update:
+    permission: op
   configreload:
+    permission: op
   evolve:
+    permission: op
   attach:
+    permission: op
+  sacrifice:
+    permission: none
