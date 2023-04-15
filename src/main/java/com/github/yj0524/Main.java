@@ -94,18 +94,18 @@ public class Main extends JavaPlugin implements Listener {
                 for (OfflinePlayer player : mushroomTeam.getPlayers()) {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
-                        player.getPlayer().setHealth(mushroomHealth);
+                        player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(mushroomHealth);
                     }
                 }
                 for (OfflinePlayer player : superMushroomTeam.getPlayers()) {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
-                        player.getPlayer().setHealth(superMushroomHealth);
+                        player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(superMushroomHealth);
                     }
                 }
                 for (OfflinePlayer player : peopleTeam.getPlayers()) {
                     if (player.isOnline()) {
-                        player.getPlayer().setHealth(peopleHealth);
+                        player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(peopleHealth);
                     }
                 }
             }
