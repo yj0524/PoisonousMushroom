@@ -120,6 +120,7 @@ public class Main extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this, this);
 
         gamerule("doMobSpawning", String.valueOf((Boolean) mobSpawn));
+        gamerule("fallDamage", String.valueOf(false));
     }
 
     @Override
