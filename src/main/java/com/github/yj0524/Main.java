@@ -309,10 +309,11 @@ public class Main extends JavaPlugin implements Listener {
 
             // 같은 팀 주변에 허스크 생성
             for (Player teamPlayer : Bukkit.getOnlinePlayers()) {
-                if (teamPlayer != player && playerTeam.getName().equals("People")) {
+                if (scoreboard.getPlayerTeam(teamPlayer).getName().equals("People")) {
                     Location playerLocation = teamPlayer.getLocation();
                     for (int i = 0; i < huskCount; i++) {
                         Location huskLocation = playerLocation.clone().add(Math.random() * 60 - 30, 0, Math.random() * 60 - 30);
+                        huskLocation.setY(world.getHighestBlockYAt(huskLocation));
                         Husk husks = (Husk) world.spawnEntity(huskLocation, EntityType.HUSK);
                         husks.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(huskHealth);
                         husks.setHealth(huskHealth);
@@ -343,13 +344,9 @@ public class Main extends JavaPlugin implements Listener {
                         if (player1 != null) {
                             // 만일 Spectator 모드에서 지면 위로 올라오지 않았거나 지면보다 높다면 제일 가까운 땅으로 이동
                             Location playerLocation = player1.getLocation();
-                            Location groundLocation = playerLocation.clone().add(0, -1, 0);
-                            if (playerLocation.getY() > groundLocation.getY()) {
-                                player1.teleport(groundLocation);
-                                player1.setGameMode(GameMode.SURVIVAL);
-                                peopleTeam.addEntry(player1.getName());
-                            }
+                            playerLocation.setY(world.getHighestBlockYAt(playerLocation));
                             player1.setGameMode(GameMode.SURVIVAL);
+                            player1.teleport(playerLocation);
                             peopleTeam.addEntry(player1.getName());
                         }
                     }
@@ -364,13 +361,9 @@ public class Main extends JavaPlugin implements Listener {
                         if (player1 != null) {
                             // 만일 Spectator 모드에서 지면 위로 올라오지 않았거나 지면보다 높다면 제일 가까운 땅으로 이동
                             Location playerLocation = player1.getLocation();
-                            Location groundLocation = playerLocation.clone().add(0, -1, 0);
-                            if (playerLocation.getY() > groundLocation.getY()) {
-                                player1.teleport(groundLocation);
-                                player1.setGameMode(GameMode.SURVIVAL);
-                                peopleTeam.addEntry(player1.getName());
-                            }
+                            playerLocation.setY(world.getHighestBlockYAt(playerLocation));
                             player1.setGameMode(GameMode.SURVIVAL);
+                            player1.teleport(playerLocation);
                             peopleTeam.addEntry(player1.getName());
                         }
                     }
@@ -613,20 +606,32 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        Location location = player.getLocation();
-        World world = player.getWorld();
+        if (mushroomTeam.hasEntry(event.getPlayer().getName())) {
+            Player player = event.getPlayer();
+            Location location = player.getLocation();
+            World world = player.getWorld();
 
-        int x = (int) (Math.random() * worldBorderSize / 2);
-        int z = (int) (Math.random() * worldBorderSize / 2);
-        int y = world.getHighestBlockYAt(x, z);
-        event.setRespawnLocation(new Location(world, x, y, z));
+            int x = (int) (Math.random() * worldBorderSize / 2);
+            int z = (int) (Math.random() * worldBorderSize / 2);
+            int y = world.getHighestBlockYAt(x, z);
+            event.setRespawnLocation(new Location(world, x, y, z));
+        }
     }
 
     @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.getTarget() != null && mushroomTeam.hasEntry(event.getTarget().getName())) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (mushroomTeam.hasEntry(player.getName())) {
+                event.setCancelled(true);
+            }
         }
     }
 }
