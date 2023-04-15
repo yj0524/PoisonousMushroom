@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 public class Evolve implements CommandExecutor {
@@ -21,6 +22,7 @@ public class Evolve implements CommandExecutor {
         if (main.mushroomTeam.hasEntry(sender.getName())) {
             main.mushroomTeam.removeEntry(sender.getName());
             main.superMushroomTeam.addEntry(sender.getName());
+            Bukkit.getPlayer(sender.getName()).getWorld().spawnEntity(Bukkit.getPlayer(sender.getName()).getLocation(), EntityType.LIGHTNING);
             for (Player allplayers : Bukkit.getOnlinePlayers()) {
                 allplayers.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sender.getName() + "이(가) 슈퍼 버섯으로 진화했습니다!");
             }
