@@ -30,6 +30,7 @@ public class Util implements CommandExecutor {
         main.getConfig().set("randomSpawn", main.randomSpawn);
         main.getConfig().set("peopleHealth", main.peopleHealth);
         main.getConfig().set("mushroomHealth", main.mushroomHealth);
+        main.getConfig().set("superMushroomHealth", main.superMushroomHealth);
         main.saveConfig();
     }
 
@@ -42,7 +43,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth>");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth>");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -307,8 +308,24 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("supermushroomhealth")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 슈퍼 버섯의 체력은 " + main.superMushroomHealth + "입니다.");
+                    } else if (args.length == 2) {
+                        try {
+                            main.superMushroomHealth = Double.parseDouble(args[1]);
+                            saveConfig();
+                            player.sendMessage("§a슈퍼 버섯의 체력을 " + main.superMushroomHealth + "으로 설정했습니다.");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§c사용법 : /util supermushroomHealth [double]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth>");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth>");
             }
         }
         return true;
