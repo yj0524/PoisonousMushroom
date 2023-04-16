@@ -15,9 +15,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.TimedRegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -75,6 +77,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("evolve").setExecutor(new Evolve(this));
         getCommand("attach").setExecutor(new Attach(this));
         getCommand("sacrifice").setExecutor(new Sacrifice(this));
+        getCommand("getcoordinate").setExecutor(new GetCoordinate(this));
 
         getCommand("poisonousmushroom").setTabCompleter(new TabCom());
         getCommand("util").setTabCompleter(new UtilTabCom());
@@ -83,6 +86,7 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("evolve").setTabCompleter(new EvolveTabCom());
         getCommand("attach").setTabCompleter(new AttachTabCom());
         getCommand("sacrifice").setTabCompleter(new SacrificeTabCom());
+        getCommand("getcoordinate").setTabCompleter(new GetCoordinateTabCom());
 
         // Config.yml 파일 생성
         loadConfig();
@@ -127,6 +131,30 @@ public class Main extends JavaPlugin implements Listener {
                 for (OfflinePlayer player : sacrificeTeam.getPlayers()) {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, -1, 0, false, false));
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0, 1);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                World world = Bukkit.getWorld("world");
+
+                if (world.getTime() < 12000) {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (mushroomTeam.hasEntry(player.getName()) || superMushroomTeam.hasEntry(player.getName())) {
+                            player.removePotionEffect(PotionEffectType.SPEED);
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, -1, 0, false, false));
+                        }
+                    }
+                }
+                else {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (mushroomTeam.hasEntry(player.getName()) || superMushroomTeam.hasEntry(player.getName())) {
+                            player.removePotionEffect(PotionEffectType.SLOW);
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, -1, 0, false, false));
+                        }
                     }
                 }
             }
@@ -329,7 +357,7 @@ public class Main extends JavaPlugin implements Listener {
                 player.setGameMode(GameMode.SURVIVAL);
             }
         } else {
-            if (!peopleTeam.hasEntry(player.getName()) && !spectatorTeam.hasEntry(player.getName()) && !sacrificeTeam.hasEntry(player.getName())) {
+            if (!peopleTeam.hasEntry(player.getName()) && !spectatorTeam.hasEntry(player.getName()) && !sacrificeTeam.hasEntry(player.getName()) && !mushroomTeam.hasEntry(player.getName()) && !superMushroomTeam.hasEntry(player.getName())) {
                 peopleTeam.addEntry(player.getName());
             }
             else if (isGameEnd) {
@@ -596,7 +624,7 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onMobSpawn(EntitySpawnEvent event) {
         if (mobSpawn) {
-            if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED) {
+            if (event.getEntityType() == EntityType.ZOMBIE || event.getEntityType() == EntityType.HUSK || event.getEntityType() == EntityType.DROWNED || event.getEntityType() == EntityType.PHANTOM) {
                 if (event.getEntityType() == EntityType.ZOMBIE) {
                     Zombie zombie = (Zombie) event.getEntity();
                     zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
@@ -606,6 +634,11 @@ public class Main extends JavaPlugin implements Listener {
                 if (event.getEntityType() == EntityType.HUSK) {
                     Husk husk = (Husk) event.getEntity();
                     husk.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(mobFollowRange);
+                }
+
+                if (event.getEntityType() == EntityType.PHANTOM) {
+                    event.setCancelled(true);
+                    return;
                 }
 
                 for (Player allPlayers : Bukkit.getOnlinePlayers()) {

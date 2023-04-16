@@ -1,5 +1,5 @@
 name: PoisonousMushroom
-version: '1.4.7'
+version: '1.4.8'
 main: com.github.yj0524.Main
 api-version: 1.19
 commands:
@@ -16,4 +16,6 @@ commands:
   attach:
     permission: op
   sacrifice:
-    permission: none
+    permission:
+  getcoordinate:
+    permission: op

@@ -3,6 +3,7 @@ package com.github.yj0524.commands;
 import com.github.yj0524.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : target.getActivePotionEffects()) {
                                 target.removePotionEffect(effect.getType());
                             }
+                            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a" + target.getName() + "님을 People 팀에 추가했습니다.");
                         }
                     } else {
@@ -47,6 +49,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : ((Player) sender).getActivePotionEffects()) {
                                 ((Player) sender).removePotionEffect(effect.getType());
                             }
+                            ((Player) sender).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a당신을 People 팀에 추가했습니다.");
                         }
                     }
@@ -69,6 +72,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : target.getActivePotionEffects()) {
                                 target.removePotionEffect(effect.getType());
                             }
+                            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a" + target.getName() + "님을 Mushroom 팀에 추가했습니다.");
                         }
                     } else {
@@ -84,6 +88,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : ((Player) sender).getActivePotionEffects()) {
                                 ((Player) sender).removePotionEffect(effect.getType());
                             }
+                            ((Player) sender).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a당신을 Mushroom 팀에 추가했습니다.");
                         }
                     }
@@ -98,14 +103,15 @@ public class Attach implements CommandExecutor {
                 if (args.length == 2) {
                     Player target = Bukkit.getPlayer(args[1]);
                     if (target != null) {
-                        if (main.spectatorTeam.hasEntry(target.getName())) {
+                        if (main.superMushroomTeam.hasEntry(target.getName())) {
                             sender.sendMessage("§c" + target.getName() + "은(는) 이미 SuperMushroom 팀입니다.");
                         } else {
-                            main.spectatorTeam.addEntry(target.getName());
+                            main.superMushroomTeam.addEntry(target.getName());
                             target.setGameMode(GameMode.SURVIVAL);
                             for (PotionEffect effect : target.getActivePotionEffects()) {
                                 target.removePotionEffect(effect.getType());
                             }
+                            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
                             sender.sendMessage("§a" + target.getName() + "님을 SuperMushroom 팀에 추가했습니다.");
                         }
                     } else {
@@ -113,14 +119,15 @@ public class Attach implements CommandExecutor {
                     }
                 } else {
                     if (sender instanceof Player) {
-                        if (main.spectatorTeam.hasEntry(sender.getName())) {
+                        if (main.superMushroomTeam.hasEntry(sender.getName())) {
                             sender.sendMessage("§c당신은 이미 SuperMushroom 팀입니다.");
                         } else {
-                            main.spectatorTeam.addEntry(sender.getName());
+                            main.superMushroomTeam.addEntry(sender.getName());
                             ((Player) sender).setGameMode(GameMode.SURVIVAL);
                             for (PotionEffect effect : ((Player) sender).getActivePotionEffects()) {
                                 ((Player) sender).removePotionEffect(effect.getType());
                             }
+                            ((Player) sender).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
                             sender.sendMessage("§a당신을 SuperMushroom 팀에 추가했습니다.");
                         }
                     }
@@ -142,6 +149,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : target.getActivePotionEffects()) {
                                 target.removePotionEffect(effect.getType());
                             }
+                            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a" + target.getName() + "님을 Spectator 팀에 추가했습니다.");
                         }
                     } else {
@@ -157,6 +165,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : ((Player) sender).getActivePotionEffects()) {
                                 ((Player) sender).removePotionEffect(effect.getType());
                             }
+                            ((Player) sender).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a당신을 Spectator 팀에 추가했습니다.");
                         }
                     }
@@ -179,6 +188,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : target.getActivePotionEffects()) {
                                 target.removePotionEffect(effect.getType());
                             }
+                            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a" + target.getName() + "님을 Sacrifice 팀에 추가했습니다.");
                         }
                     } else {
@@ -194,6 +204,7 @@ public class Attach implements CommandExecutor {
                             for (PotionEffect effect : ((Player) sender).getActivePotionEffects()) {
                                 ((Player) sender).removePotionEffect(effect.getType());
                             }
+                            ((Player) sender).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
                             sender.sendMessage("§a당신을 Sacrifice 팀에 추가했습니다.");
                         }
                     }
