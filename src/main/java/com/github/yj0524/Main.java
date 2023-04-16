@@ -110,8 +110,7 @@ public class Main extends JavaPlugin implements Listener {
                 for (OfflinePlayer player : superMushroomTeam.getPlayers()) {
                     if (player.isOnline()) {
                         player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, -1, 0, false, false));
-                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, -1, 1, false, false));
-                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, -1, 0, false, false));
+                        player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, -1, 0, false, false));
                         player.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(superMushroomHealth);
                     }
                 }
@@ -610,7 +609,10 @@ public class Main extends JavaPlugin implements Listener {
                 }
 
                 for (Player allPlayers : Bukkit.getOnlinePlayers()) {
-                    if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && !mushroomTeam.hasEntry(String.valueOf(allPlayers)) || !superMushroomTeam.hasEntry(String.valueOf(allPlayers)) && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
+                    if (allPlayers.getGameMode() == GameMode.SURVIVAL || allPlayers.getGameMode() == GameMode.ADVENTURE && allPlayers.getLocation().distance(event.getLocation()) <= mobFollowRange) {
+                        if (mushroomTeam.hasEntry(allPlayers.getName()) || superMushroomTeam.hasEntry(allPlayers.getName())) {
+                            return;
+                        }
                         if (event.getEntityType() == EntityType.ZOMBIE) {
                             Zombie zombie = (Zombie) event.getEntity();
                             zombie.setTarget(allPlayers);
@@ -660,6 +662,16 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
+    public void onEntityTarget(EntityTargetEvent event) {
+        if (event.getEntity() instanceof Monster && event.getTarget() instanceof Player) {
+            Player player = (Player) event.getTarget();
+            if (mushroomTeam.hasEntry(player.getName()) || superMushroomTeam.hasEntry(player.getName())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) {
             return;
@@ -674,7 +686,7 @@ public class Main extends JavaPlugin implements Listener {
 
             if (event.getEntity() instanceof Player) {
                 Player target = (Player) event.getEntity();
-                if (mushroomTeam.hasEntry(target.getName())) {
+                if (mushroomTeam.hasEntry(target.getName()) || superMushroomTeam.hasEntry(target.getName())) {
                     event.setDamage(event.getDamage() * damageMultiplier);
                 }
             }
@@ -719,15 +731,6 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onEntityTarget(EntityTargetEvent event) {
-        if (event.getTarget() != null) {
-            if (mushroomTeam.hasEntry(event.getTarget().getName()) || superMushroomTeam.hasEntry(event.getTarget().getName())) {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
     public void onCraftItem(CraftItemEvent event) {
         if (mushroomTeam.hasEntry(event.getWhoClicked().getName())) {
             if (event.getRecipe().getResult().getType() == Material.DIAMOND_SWORD || event.getRecipe().getResult().getType() == Material.DIAMOND_PICKAXE || event.getRecipe().getResult().getType() == Material.DIAMOND_AXE || event.getRecipe().getResult().getType() == Material.DIAMOND_SHOVEL || event.getRecipe().getResult().getType() == Material.DIAMOND_HOE || event.getRecipe().getResult().getType() == Material.DIAMOND_HELMET || event.getRecipe().getResult().getType() == Material.DIAMOND_CHESTPLATE || event.getRecipe().getResult().getType() == Material.DIAMOND_LEGGINGS || event.getRecipe().getResult().getType() == Material.DIAMOND_BOOTS) {
@@ -754,6 +757,29 @@ public class Main extends JavaPlugin implements Listener {
                     Player target = (Player) event.getEntity();
                     if (peopleTeam.hasEntry(target.getName())) {
                         target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 300, 0, false, false));
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onFriendlyMushroom(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player player = (Player) event.getDamager();
+            if (mushroomTeam.hasEntry(player.getName())) {
+                if (event.getEntity() instanceof Player) {
+                    Player target = (Player) event.getEntity();
+                    if (superMushroomTeam.hasEntry(target.getName())) {
+                        event.setCancelled(true);
+                    }
+                }
+            }
+            else if (superMushroomTeam.hasEntry(player.getName())) {
+                if (event.getEntity() instanceof Player) {
+                    Player target = (Player) event.getEntity();
+                    if (mushroomTeam.hasEntry(target.getName())) {
+                        event.setCancelled(true);
                     }
                 }
             }
