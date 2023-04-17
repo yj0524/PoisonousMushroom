@@ -61,6 +61,7 @@ public class Main extends JavaPlugin implements Listener {
     public double sacrificePercent;
     public double infectionPercent;
     public boolean infectionEnable;
+    public boolean gameEndMessageEnable;
 
     @Override
     public void onEnable() {
@@ -321,6 +322,7 @@ public class Main extends JavaPlugin implements Listener {
         sacrificePercent = config.getDouble("sacrificePercent", 30.0);
         infectionPercent = config.getDouble("infectionPercent", 15.0);
         infectionEnable = config.getBoolean("infectionEnable", true);
+        gameEndMessageEnable = config.getBoolean("gameEndMessageEnable", false);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -341,6 +343,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("sacrificePercent", sacrificePercent);
         config.set("infectionPercent", infectionPercent);
         config.set("infectionEnable", infectionEnable);
+        config.set("gameEndMessageEnable", gameEndMessageEnable);
         saveConfig();
     }
 
@@ -527,8 +530,10 @@ public class Main extends JavaPlugin implements Listener {
                                         spectatorTeam.addEntry(player1.getName());
                                     }
                                 }
-                                for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                                    allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                if (gameEndMessageEnable) {
+                                    for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                        allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                    }
                                 }
                             }, 200);
                             // serverShutDownTick 틱 후에 서버 종료
@@ -558,8 +563,10 @@ public class Main extends JavaPlugin implements Listener {
                                         spectatorTeam.addEntry(player1.getName());
                                     }
                                 }
-                                for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                                    allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                if (gameEndMessageEnable) {
+                                    for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                        allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                    }
                                 }
                             }, 200);
                         }

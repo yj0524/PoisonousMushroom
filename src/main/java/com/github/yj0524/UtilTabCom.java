@@ -33,6 +33,7 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("sacrificepercent");
             arguments.add("infectionpercent");
             arguments.add("infectionenable");
+            arguments.add("gameendmessageenable");
         }
 
         List<String> result = new ArrayList<>();
