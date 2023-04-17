@@ -248,10 +248,10 @@ public class Main extends JavaPlugin implements Listener {
         vaccine.setItemMeta(vaccineMeta);
         NamespacedKey key = new NamespacedKey(this, "vaccine");
         ShapedRecipe vaccineRecipe = new ShapedRecipe(key, vaccine);
-        vaccineRecipe.shape("T S", " N ", "EAC");
+        vaccineRecipe.shape("T S", " R ", "EAC");
         vaccineRecipe.setIngredient('T', Material.TRIDENT);
         vaccineRecipe.setIngredient('S', Material.MUSHROOM_STEW);
-        vaccineRecipe.setIngredient('N', new ItemStack(respawnsemaphore));
+        vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
         vaccineRecipe.setIngredient('E', Material.EMERALD);
         vaccineRecipe.setIngredient('A', Material.GOLDEN_APPLE);
         vaccineRecipe.setIngredient('C', Material.COPPER_INGOT);
