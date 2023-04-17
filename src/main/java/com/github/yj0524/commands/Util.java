@@ -1,14 +1,22 @@
 package com.github.yj0524.commands;
 
 import com.github.yj0524.Main;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static org.bukkit.Bukkit.getServer;
+
 public class Util implements CommandExecutor {
 
     Main main;
+
+    World overworld = getServer().getWorld("world");
+    World nether = getServer().getWorld("world_nether");
+    World end = getServer().getWorld("world_the_end");
 
     public Util(Main main) {
         this.main = main;
@@ -35,11 +43,8 @@ public class Util implements CommandExecutor {
         main.getConfig().set("infectionPercent", main.infectionPercent);
         main.getConfig().set("infectionEnable", main.infectionEnable);
         main.getConfig().set("gameEndMessageEnable", main.gameEndMessageEnable);
+        main.getConfig().set("informationEnable", main.informationEnable);
         main.saveConfig();
-    }
-
-    public void gamerule(String gamerule, String value) {
-        main.getServer().dispatchCommand(main.getServer().getConsoleSender(), "gamerule " + gamerule + " " + value);
     }
 
     @Override
@@ -47,7 +52,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent, infectionpercent, infectionenable, gameendmessageenable>");
+                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent, infectionpercent, infectionenable, gameendmessageenable, informationenable>");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -168,12 +173,16 @@ public class Util implements CommandExecutor {
                         if (args[1].equals("true")) {
                             main.mobSpawn = true;
                             saveConfig();
-                            gamerule("doMobSpawning", String.valueOf((Boolean) main.mobSpawn));
+                            overworld.setGameRule(GameRule.DO_MOB_SPAWNING, main.mobSpawn);
+                            nether.setGameRule(GameRule.DO_MOB_SPAWNING, main.mobSpawn);
+                            end.setGameRule(GameRule.DO_MOB_SPAWNING, main.mobSpawn);
                             player.sendMessage("§a몹 스폰 기능을 활성화했습니다.");
                         } else if (args[1].equals("false")) {
                             main.mobSpawn = false;
                             saveConfig();
-                            gamerule("doMobSpawning", String.valueOf((Boolean) main.mobSpawn));
+                            overworld.setGameRule(GameRule.DO_MOB_SPAWNING, main.mobSpawn);
+                            nether.setGameRule(GameRule.DO_MOB_SPAWNING, main.mobSpawn);
+                            end.setGameRule(GameRule.DO_MOB_SPAWNING, main.mobSpawn);
                             player.sendMessage("§a몹 스폰 기능을 비활성화했습니다.");
                         } else {
                             player.sendMessage("§c사용법 : /util mobspawn [bool]");
@@ -394,8 +403,28 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("informationenable")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 정보 활성화 여부는 " + main.informationEnable + "입니다.");
+                    } else if (args.length == 2) {
+                        if (args[1].equals("true")) {
+                            main.informationEnable = true;
+                            saveConfig();
+                            player.sendMessage("§a정보 활성화 여부를 활성화했습니다.");
+                        } else if (args[1].equals("false")) {
+                            main.informationEnable = false;
+                            saveConfig();
+                            player.sendMessage("§a정보 활성화 여부를 비활성화했습니다.");
+                        } else {
+                            player.sendMessage("§c사용법 : /util informationenable [bool]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent, infectionpercent, infectionenable, gameendmessageenable>");
+                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent, infectionpercent, infectionenable, gameendmessageenable, informationenable>");
             }
         }
         return true;

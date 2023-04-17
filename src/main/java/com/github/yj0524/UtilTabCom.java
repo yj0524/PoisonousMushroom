@@ -34,6 +34,7 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("infectionpercent");
             arguments.add("infectionenable");
             arguments.add("gameendmessageenable");
+            arguments.add("informationenable");
         }
 
         List<String> result = new ArrayList<>();
@@ -168,6 +169,20 @@ public class UtilTabCom implements TabCompleter {
 
         // infectionenable Command
         if (arg[0].equalsIgnoreCase("infectionenable")) {
+            result.add("true");
+            result.add("false");
+            return result;
+        }
+
+        // gameendmessageenable Command
+        if (arg[0].equalsIgnoreCase("gameendmessageenable")) {
+            result.add("true");
+            result.add("false");
+            return result;
+        }
+
+        // informationenable Command
+        if (arg[0].equalsIgnoreCase("informationenable")) {
             result.add("true");
             result.add("false");
             return result;

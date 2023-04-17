@@ -31,6 +31,10 @@ public class Main extends JavaPlugin implements Listener {
     public ScoreboardManager scoreboardManager;
     public Scoreboard scoreboard;
 
+    public World overworld = Bukkit.getWorld("world");
+    public World nether = Bukkit.getWorld("world_nether");
+    public World end = Bukkit.getWorld("world_the_end");
+
     public Team spectatorTeam;
     public Team sacrificeTeam;
     public Team mushroomTeam;
@@ -62,6 +66,7 @@ public class Main extends JavaPlugin implements Listener {
     public double infectionPercent;
     public boolean infectionEnable;
     public boolean gameEndMessageEnable;
+    public boolean informationEnable;
 
     @Override
     public void onEnable() {
@@ -159,11 +164,29 @@ public class Main extends JavaPlugin implements Listener {
             }
         }.runTaskTimer(this, 0, 1);
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.setPlayerListHeader("§a" + getPluginMeta().getName() + " Version " + version + "\nMade by yj0524_kr");
+                    player.setPlayerListFooter("Ping : " + player.getPing() + "ms\nServer Memory : " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024 + "MB / " + Runtime.getRuntime().maxMemory() / 1024 / 1024 + "MB");
+                }
+            }
+        }.runTaskTimer(this, 0, 1);
+
         Bukkit.getPluginManager().registerEvents(this, this);
 
-        gamerule("doMobSpawning", String.valueOf((Boolean) mobSpawn));
-        gamerule("fallDamage", String.valueOf(false));
-        gamerule("doImmediateRespawn", String.valueOf(true));
+        overworld.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
+        overworld.setGameRule(GameRule.FALL_DAMAGE, false);
+        overworld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+
+        nether.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
+        nether.setGameRule(GameRule.FALL_DAMAGE, false);
+        nether.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+
+        end.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
+        end.setGameRule(GameRule.FALL_DAMAGE, false);
+        end.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     }
 
     @Override
@@ -171,10 +194,6 @@ public class Main extends JavaPlugin implements Listener {
         getLogger().info("Plugin Disabled");
 
         isGameEnd = false;
-    }
-
-    public void gamerule(String gamerule, String value) {
-        getServer().dispatchCommand(getServer().getConsoleSender(), "gamerule " + gamerule + " " + value);
     }
 
     private void addTeam() {
@@ -249,13 +268,16 @@ public class Main extends JavaPlugin implements Listener {
         vaccine.setItemMeta(vaccineMeta);
         NamespacedKey key = new NamespacedKey(this, "vaccine");
         ShapedRecipe vaccineRecipe = new ShapedRecipe(key, vaccine);
-        vaccineRecipe.shape("T S", " R ", "EAC");
+        vaccineRecipe.shape("OTD", "EAC", "NBR");
+        vaccineRecipe.setIngredient('O', Material.BROWN_MUSHROOM);
         vaccineRecipe.setIngredient('T', Material.TRIDENT);
-        vaccineRecipe.setIngredient('S', Material.MUSHROOM_STEW);
-        vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
+        vaccineRecipe.setIngredient('D', Material.RED_MUSHROOM);
         vaccineRecipe.setIngredient('E', Material.EMERALD);
         vaccineRecipe.setIngredient('A', Material.GOLDEN_APPLE);
         vaccineRecipe.setIngredient('C', Material.COPPER_INGOT);
+        vaccineRecipe.setIngredient('N', Material.NETHERITE_INGOT);
+        vaccineRecipe.setIngredient('B', Material.GLASS_BOTTLE);
+        vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
         Bukkit.addRecipe(vaccineRecipe);
     }
 
@@ -278,24 +300,26 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     private void loadScoreboard() {
-        Objective objective;
+        if (informationEnable) {
+            Objective objective;
 
-        if (scoreboard.getObjective("Information") != null) {
-            scoreboard.getObjective("Information").unregister();
-        }
+            if (scoreboard.getObjective("Information") != null) {
+                scoreboard.getObjective("Information").unregister();
+            }
 
-        objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            objective = scoreboard.registerNewObjective("Information", Criteria.DUMMY, ChatColor.AQUA + "Information");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(5);
-        objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(4);
-        objective.getScore(ChatColor.WHITE + " ").setScore(3);
-        objective.getScore(ChatColor.GREEN + "Version " + version).setScore(2);
-        objective.getScore(ChatColor.GREEN + "Minecraft 1.19.4").setScore(1);
-        objective.getScore(ChatColor.GREEN + "Made by yj0524_kr").setScore(0);
-        for (String entry : scoreboard.getEntries()) {
-            if (scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(entry).getScore() < 0) {
-                scoreboard.resetScores(entry);
+            objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "POISONOUS MUSHROOM").setScore(5);
+            objective.getScore(ChatColor.RED + "" + ChatColor.BOLD + "포자 : 최후의 생존자들").setScore(4);
+            objective.getScore(ChatColor.WHITE + " ").setScore(3);
+            objective.getScore(ChatColor.GREEN + "Version " + version).setScore(2);
+            objective.getScore(ChatColor.GREEN + "Minecraft 1.19.4").setScore(1);
+            objective.getScore(ChatColor.GREEN + "Made by yj0524_kr").setScore(0);
+            for (String entry : scoreboard.getEntries()) {
+                if (scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(entry).getScore() < 0) {
+                    scoreboard.resetScores(entry);
+                }
             }
         }
     }
@@ -323,6 +347,7 @@ public class Main extends JavaPlugin implements Listener {
         infectionPercent = config.getDouble("infectionPercent", 15.0);
         infectionEnable = config.getBoolean("infectionEnable", true);
         gameEndMessageEnable = config.getBoolean("gameEndMessageEnable", false);
+        informationEnable = config.getBoolean("informationEnable", true);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -344,6 +369,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("infectionPercent", infectionPercent);
         config.set("infectionEnable", infectionEnable);
         config.set("gameEndMessageEnable", gameEndMessageEnable);
+        config.set("informationEnable", informationEnable);
         saveConfig();
     }
 
@@ -378,7 +404,7 @@ public class Main extends JavaPlugin implements Listener {
         // Mushroom 팀에 있는 사람이 죽었다면
         if (playerTeam != null) {
             if (playerTeam.getName().equals("Mushroom") || playerTeam.getName().equals("SuperMushroom")) {
-                String message = "§a버섯이 죽었습니다! 버섯이 월드의 스폰으로 이동했습니다!";
+                String message = "§a버섯 " + event.getPlayer().getName() + "이(가) 죽었습니다! 월드의 스폰으로 이동했습니다!";
                 for (Player allplayers : Bukkit.getOnlinePlayers()) {
                     allplayers.sendMessage(message);
                 }
