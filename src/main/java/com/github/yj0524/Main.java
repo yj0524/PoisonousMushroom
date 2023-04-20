@@ -268,16 +268,16 @@ public class Main extends JavaPlugin implements Listener {
         vaccine.setItemMeta(vaccineMeta);
         NamespacedKey key = new NamespacedKey(this, "vaccine");
         ShapedRecipe vaccineRecipe = new ShapedRecipe(key, vaccine);
-        vaccineRecipe.shape("OTD", "EAC", "NBR");
+        vaccineRecipe.shape("ORD", "ABT", "CNE");
         vaccineRecipe.setIngredient('O', Material.BROWN_MUSHROOM);
-        vaccineRecipe.setIngredient('T', Material.TRIDENT);
+        vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
         vaccineRecipe.setIngredient('D', Material.RED_MUSHROOM);
-        vaccineRecipe.setIngredient('E', Material.EMERALD);
         vaccineRecipe.setIngredient('A', Material.GOLDEN_APPLE);
+        vaccineRecipe.setIngredient('B', Material.GLASS_BOTTLE);
+        vaccineRecipe.setIngredient('T', Material.TRIDENT);
         vaccineRecipe.setIngredient('C', Material.COPPER_INGOT);
         vaccineRecipe.setIngredient('N', Material.NETHERITE_INGOT);
-        vaccineRecipe.setIngredient('B', Material.GLASS_BOTTLE);
-        vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
+        vaccineRecipe.setIngredient('E', Material.EMERALD);
         Bukkit.addRecipe(vaccineRecipe);
     }
 
