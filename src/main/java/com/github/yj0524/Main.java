@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -533,7 +534,7 @@ public class Main extends JavaPlugin implements Listener {
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
                         if (serverAutoShutDown) {
                             // serverAutoShutDown이 true일 경우
-                            allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다." + (serverShutDownTick / 20) + " 초 후에 서버가 종료됩니다.");
+                            allplayers.sendTitle("§c게임 종료", "§a포자 퇴치기를 만들었습니다. " + (serverShutDownTick / 20) + "초 후에 서버가 종료됩니다.");
                             // Mushroom 팀을 Spectator 팀으로 모두 Join
                             for (String entry : mushroomTeam.getEntries()) {
                                 Player player1 = Bukkit.getPlayer(entry);
@@ -546,22 +547,37 @@ public class Main extends JavaPlugin implements Listener {
                             for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
                                 allplayers1.sendMessage("§c버섯이 소멸했습니다!");
                             }
-                            // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
-                            Bukkit.getScheduler().runTaskLater(this, () -> {
-                                // People 팀을 Spectator 팀으로 모두 Join
-                                for (String entry : peopleTeam.getEntries()) {
-                                    Player player1 = Bukkit.getPlayer(entry);
-                                    if (player1 != null) {
-                                        player1.setGameMode(GameMode.SPECTATOR);
-                                        spectatorTeam.addEntry(player1.getName());
-                                    }
+                            // mushroomPlayerName 플레이어의 위치에 별 모양 폭죽을 터뜨림
+                            if (mushroomPlayerName != null) {
+                                Player mushroomPlayer = Bukkit.getPlayer(mushroomPlayerName);
+                                if (mushroomPlayer != null) {
+                                    World world = mushroomPlayer.getWorld();
+                                    Location location = mushroomPlayer.getLocation();
+
+                                    FireworkEffect effect = FireworkEffect.builder().withColor(Color.GREEN).with(FireworkEffect.Type.STAR).build();
+                                    Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
+                                    FireworkMeta meta = firework.getFireworkMeta();
+                                    meta.addEffect(effect);
+                                    meta.setPower(1);
+                                    firework.setFireworkMeta(meta);
                                 }
-                                if (gameEndMessageEnable) {
+                            }
+                            if (gameEndMessageEnable) {
+                                // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
+                                Bukkit.getScheduler().runTaskLater(this, () -> {
+                                    // People 팀을 Spectator 팀으로 모두 Join
+                                    for (String entry : peopleTeam.getEntries()) {
+                                        Player player1 = Bukkit.getPlayer(entry);
+                                        if (player1 != null) {
+                                            player1.setGameMode(GameMode.SPECTATOR);
+                                            spectatorTeam.addEntry(player1.getName());
+                                        }
+                                    }
                                     for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
                                         allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
                                     }
-                                }
-                            }, 200);
+                                }, 200);
+                            }
                             // serverShutDownTick 틱 후에 서버 종료
                             Bukkit.getScheduler().runTaskLater(this, () -> Bukkit.getServer().shutdown(), serverShutDownTick + 200);
                         } else {
@@ -579,22 +595,39 @@ public class Main extends JavaPlugin implements Listener {
                             for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
                                 allplayers1.sendMessage("§c버섯이 소멸했습니다!");
                             }
-                            // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
-                            Bukkit.getScheduler().runTaskLater(this, () -> {
-                                // People 팀을 Spectator 팀으로 모두 Join
-                                for (String entry : peopleTeam.getEntries()) {
-                                    Player player1 = Bukkit.getPlayer(entry);
-                                    if (player1 != null) {
-                                        player1.setGameMode(GameMode.SPECTATOR);
-                                        spectatorTeam.addEntry(player1.getName());
-                                    }
+                            // mushroomPlayerName 플레이어의 위치에 별 모양 폭죽을 터뜨림
+                            if (mushroomPlayerName != null) {
+                                Player mushroomPlayer = Bukkit.getPlayer(mushroomPlayerName);
+                                if (mushroomPlayer != null) {
+                                    World world = mushroomPlayer.getWorld();
+                                    Location location = mushroomPlayer.getLocation();
+
+                                    FireworkEffect effect = FireworkEffect.builder().withColor(Color.GREEN).with(FireworkEffect.Type.STAR).build();
+                                    Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
+                                    FireworkMeta meta = firework.getFireworkMeta();
+                                    meta.addEffect(effect);
+                                    meta.setPower(1);
+                                    firework.setFireworkMeta(meta);
                                 }
-                                if (gameEndMessageEnable) {
-                                    for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
-                                        allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                            }
+                            if (gameEndMessageEnable) {
+                                // 모든 플레이어에게 "버섯은 사라졌지만, 이미 인간도 감염되어있었다..." 라는 메시지를 게임이 종료되고 5초 후에 보냄
+                                Bukkit.getScheduler().runTaskLater(this, () -> {
+                                    // People 팀을 Spectator 팀으로 모두 Join
+                                    for (String entry : peopleTeam.getEntries()) {
+                                        Player player1 = Bukkit.getPlayer(entry);
+                                        if (player1 != null) {
+                                            player1.setGameMode(GameMode.SPECTATOR);
+                                            spectatorTeam.addEntry(player1.getName());
+                                        }
                                     }
-                                }
-                            }, 200);
+                                    if (gameEndMessageEnable) {
+                                        for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                                            allplayers1.sendMessage("§c버섯은 사라졌지만, 이미 인간도 감염되어있었다...");
+                                        }
+                                    }
+                                }, 200);
+                            }
                         }
                     }
                 }
