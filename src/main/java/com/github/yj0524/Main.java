@@ -373,6 +373,7 @@ public class Main extends JavaPlugin implements Listener {
         config.set("infectionEnable", infectionEnable);
         config.set("gameEndMessageEnable", gameEndMessageEnable);
         config.set("informationEnable", informationEnable);
+        config.set("foodLevel", foodLevel);
         saveConfig();
     }
 
