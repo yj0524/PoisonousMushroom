@@ -52,7 +52,7 @@ public class Util implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent, infectionpercent, infectionenable, gameendmessageenable, informationenable>");
+                player.sendMessage("§c사용법 : /util <type> [value]");
             } else if (args[0].equals("huskhealth")) {
                 if (player.isOp()) {
                     if (args.length == 1) {
@@ -143,7 +143,7 @@ public class Util implements CommandExecutor {
                             saveConfig();
                             player.sendMessage("§a몹 팔로우 범위를 " + main.mobFollowRange + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util mobfollowrange [double]");
+                            player.sendMessage("§c사용법 : /util mobfollowrange [int]");
                         }
                     }
                 } else {
@@ -159,7 +159,7 @@ public class Util implements CommandExecutor {
                             saveConfig();
                             player.sendMessage("§a리스폰 스펙토어 범위를 " + main.respawnSpectatorRange + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util respawnspectatorrange [double]");
+                            player.sendMessage("§c사용법 : /util respawnspectatorrange [int]");
                         }
                     }
                 } else {
@@ -197,11 +197,11 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 허스크가 삼지창을 떨어뜨릴 확률은 " + main.huskTridentPercent + "%입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.huskTridentPercent = Double.parseDouble(args[1]);
+                            main.huskTridentPercent = Float.parseFloat(args[1]);
                             saveConfig();
                             player.sendMessage("§a허스크가 삼지창을 떨어뜨릴 확률을 " + main.huskTridentPercent + "%로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util husktridentpercent [double]");
+                            player.sendMessage("§c사용법 : /util husktridentpercent [float]");
                         }
                     }
                 } else {
@@ -289,11 +289,11 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 생존자의 체력은 " + main.peopleHealth + "입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.peopleHealth = Double.parseDouble(args[1]);
+                            main.peopleHealth = Float.parseFloat(args[1]);
                             saveConfig();
                             player.sendMessage("§a생존자의 체력을 " + main.peopleHealth + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util peopleHealth [double]");
+                            player.sendMessage("§c사용법 : /util peopleHealth [float]");
                         }
                     }
                 } else {
@@ -305,11 +305,11 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 버섯의 체력은 " + main.mushroomHealth + "입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.mushroomHealth = Double.parseDouble(args[1]);
+                            main.mushroomHealth = Float.parseFloat(args[1]);
                             saveConfig();
                             player.sendMessage("§a버섯의 체력을 " + main.mushroomHealth + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util mushroomHealth [double]");
+                            player.sendMessage("§c사용법 : /util mushroomHealth [float]");
                         }
                     }
                 } else {
@@ -321,11 +321,11 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 슈퍼 버섯의 체력은 " + main.superMushroomHealth + "입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.superMushroomHealth = Double.parseDouble(args[1]);
+                            main.superMushroomHealth = Float.parseFloat(args[1]);
                             saveConfig();
                             player.sendMessage("§a슈퍼 버섯의 체력을 " + main.superMushroomHealth + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util supermushroomHealth [double]");
+                            player.sendMessage("§c사용법 : /util supermushroomHealth [float]");
                         }
                     }
                 } else {
@@ -337,11 +337,11 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 희생 성공 확률은 " + main.sacrificePercent + "입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.sacrificePercent = Double.parseDouble(args[1]);
+                            main.sacrificePercent = Float.parseFloat(args[1]);
                             saveConfig();
                             player.sendMessage("§a희생 성공 확률을 " + main.sacrificePercent + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util sacrificepercent [double]");
+                            player.sendMessage("§c사용법 : /util sacrificepercent [float]");
                         }
                     }
                 } else {
@@ -353,11 +353,11 @@ public class Util implements CommandExecutor {
                         player.sendMessage("§a현재 감염 성공 확률은 " + main.infectionPercent + "입니다.");
                     } else if (args.length == 2) {
                         try {
-                            main.infectionPercent = Double.parseDouble(args[1]);
+                            main.infectionPercent = Float.parseFloat(args[1]);
                             saveConfig();
                             player.sendMessage("§a감염 성공 확률을 " + main.infectionPercent + "으로 설정했습니다.");
                         } catch (NumberFormatException e) {
-                            player.sendMessage("§c사용법 : /util infectionpercent [double]");
+                            player.sendMessage("§c사용법 : /util infectionpercent [float]");
                         }
                     }
                 } else {
@@ -423,8 +423,24 @@ public class Util implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("foodlevel")) {
+                if (player.isOp()) {
+                    if (args.length == 1) {
+                        player.sendMessage("§a현재 허기 수치는 " + main.foodLevel + "입니다.");
+                    } else if (args.length == 2) {
+                        try {
+                            main.foodLevel = Float.parseFloat(args[1]);
+                            saveConfig();
+                            player.sendMessage("§a허기 수치를 " + main.foodLevel + "으로 설정했습니다.");
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§c사용법 : /util foodlevel [float]");
+                        }
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /util <huskhealth, huskcount, mushroomplayername, serverautoshutdown, servershutdowntick, mobfollowrange, respawnspectatorrange, mobspawn, husktridentpercent, worldbordersize, worldborderenable, endgateway, randomspawn, peoplehealth, mushroomhealth, supermushroomhealth, sacrificepercent, infectionpercent, infectionenable, gameendmessageenable, informationenable>");
+                player.sendMessage("§a사용법 : /util <type> [value]");
             }
         }
         return true;

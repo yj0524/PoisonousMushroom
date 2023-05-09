@@ -43,7 +43,7 @@ public class Main extends JavaPlugin implements Listener {
     public Team peopleTeam;
 
     public boolean isGameEnd = false;
-    public final double[] damageMultipliers = { 1.2, 1.4, 1.6, 1.8, 2.0 };
+    public final float[] damageMultipliers = { 1.2f, 1.4f, 1.6f, 1.8f, 2.0f };
     public String version = getDescription().getVersion();
 
     // Config.yml 파일에 들어갈 값들
@@ -55,19 +55,20 @@ public class Main extends JavaPlugin implements Listener {
     public int mobFollowRange;
     public int respawnSpectatorRange;
     public boolean mobSpawn;
-    public double huskTridentPercent;
+    public float huskTridentPercent;
     public int worldBorderSize;
     public boolean worldBorderEnable;
     public boolean endGateway;
     public boolean randomSpawn;
-    public double peopleHealth;
-    public double mushroomHealth;
-    public double superMushroomHealth;
-    public double sacrificePercent;
-    public double infectionPercent;
+    public float peopleHealth;
+    public float mushroomHealth;
+    public float superMushroomHealth;
+    public float sacrificePercent;
+    public float infectionPercent;
     public boolean infectionEnable;
     public boolean gameEndMessageEnable;
     public boolean informationEnable;
+    public float foodLevel;
 
     @Override
     public void onEnable() {
@@ -284,16 +285,16 @@ public class Main extends JavaPlugin implements Listener {
 
     private void setWorldBorder() {
         if (worldBorderEnable) {
-            WorldBorder worldBorder_over = getServer().getWorld("world").getWorldBorder();
+            WorldBorder worldBorder_over = overworld.getWorldBorder();
             worldBorder_over.setCenter(0, 0);
             worldBorder_over.setSize(worldBorderSize);
 
-            WorldBorder worldBorder_nether = getServer().getWorld("world_nether").getWorldBorder();
+            WorldBorder worldBorder_nether = nether.getWorldBorder();
             worldBorder_nether.setCenter(0, 0);
             worldBorder_nether.setSize(worldBorderSize);
 
             if (!endGateway) {
-                WorldBorder worldBorder_end = getServer().getWorld("world_the_end").getWorldBorder();
+                WorldBorder worldBorder_end = end.getWorldBorder();
                 worldBorder_end.setCenter(0, 0);
                 worldBorder_end.setSize(512);
             }
@@ -332,23 +333,24 @@ public class Main extends JavaPlugin implements Listener {
         huskCount = config.getInt("huskCount", 10);
         mushroomPlayerName = config.getString("mushroomPlayerName", "yj0524_kr");
         serverAutoShutDown = config.getBoolean("serverAutoShutDown", false);
-        serverShutDownTick = config.getInt("serverShutDownTick", 600);
+        serverShutDownTick = config.getInt("serverShutDownTick", 60);
         mobFollowRange = config.getInt("mobFollowRange", 128);
-        respawnSpectatorRange = config.getInt("respawnSpectatorRange", 10);
+        respawnSpectatorRange = config.getInt("respawnSpectatorRange", 15);
         mobSpawn = config.getBoolean("mobSpawn", true);
-        huskTridentPercent = config.getDouble("huskTridentPercent", 10.0);
-        worldBorderSize = config.getInt("worldBorderSize", 2048);
+        huskTridentPercent = (float) config.getDouble("huskTridentPercent", 0.3f);
+        worldBorderSize = config.getInt("worldBorderSize", 1024);
         worldBorderEnable = config.getBoolean("worldBorderEnable", true);
-        endGateway = config.getBoolean("endGateway", false);
+        endGateway = config.getBoolean("endGateway", true);
         randomSpawn = config.getBoolean("randomSpawn", true);
-        peopleHealth = config.getDouble("peopleHealth", 20.0);
-        mushroomHealth = config.getDouble("mushroomHealth", 20.0);
-        superMushroomHealth = config.getDouble("superMushroomHealth", 40.0);
-        sacrificePercent = config.getDouble("sacrificePercent", 30.0);
-        infectionPercent = config.getDouble("infectionPercent", 15.0);
+        peopleHealth = (float) config.getDouble("peopleHealth", 20.0f);
+        mushroomHealth = (float) config.getDouble("mushroomHealth", 20.0f);
+        superMushroomHealth = (float) config.getDouble("superMushroomHealth", 40.0f);
+        sacrificePercent = (float) config.getDouble("sacrificePercent", 30.0f);
+        infectionPercent = (float) config.getDouble("infectionPercent", 15.0f);
         infectionEnable = config.getBoolean("infectionEnable", true);
         gameEndMessageEnable = config.getBoolean("gameEndMessageEnable", false);
-        informationEnable = config.getBoolean("informationEnable", true);
+        informationEnable = config.getBoolean("informationEnable", false);
+        foodLevel = (float) config.getDouble("foodLevel", 0.5f);
         // Save config
         config.set("huskHealth", huskHealth);
         config.set("huskCount", huskCount);
@@ -405,9 +407,13 @@ public class Main extends JavaPlugin implements Listener {
         // Mushroom 팀에 있는 사람이 죽었다면
         if (playerTeam != null) {
             if (playerTeam.getName().equals("Mushroom") || playerTeam.getName().equals("SuperMushroom")) {
-                String message = "§a버섯 " + event.getPlayer().getName() + "이(가) 죽었습니다! 월드의 스폰으로 이동했습니다!";
                 for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                    allplayers.sendMessage(message);
+                    if (randomSpawn) {
+                        allplayers.sendMessage("§a버섯 " + event.getPlayer().getName() + "이(가) 죽었습니다! 월드의 랜덤 스폰 위치로 이동했습니다!");
+                    }
+                    else if (!randomSpawn) {
+                        allplayers.sendMessage("§a버섯 " + event.getPlayer().getName() + "이(가) 죽었습니다! 월드의 스폰으로 이동했습니다!");
+                    }
                 }
             }
         }
@@ -880,6 +886,14 @@ public class Main extends JavaPlugin implements Listener {
                     }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            event.setFoodLevel((int) (player.getFoodLevel() * foodLevel));
         }
     }
 }

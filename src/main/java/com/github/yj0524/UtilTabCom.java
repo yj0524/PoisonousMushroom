@@ -35,6 +35,7 @@ public class UtilTabCom implements TabCompleter {
             arguments.add("infectionenable");
             arguments.add("gameendmessageenable");
             arguments.add("informationenable");
+            arguments.add("foodlevel");
         }
 
         List<String> result = new ArrayList<>();
@@ -185,6 +186,12 @@ public class UtilTabCom implements TabCompleter {
         if (arg[0].equalsIgnoreCase("informationenable")) {
             result.add("true");
             result.add("false");
+            return result;
+        }
+
+        // foodlevel Command
+        if (arg[0].equalsIgnoreCase("foodlevel")) {
+            result.clear();
             return result;
         }
 
