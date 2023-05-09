@@ -25,7 +25,7 @@ public class UpdateChecker {
             if (version.equals(currentversion)) {
                 Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "You are using the latest version.");
             } else {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin is not up to date. Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin is not up to date. Latest version is " + version + ". Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
             }
         } catch (Throwable t) {
             try {
@@ -39,10 +39,10 @@ public class UpdateChecker {
                 if (version.equals(currentversion)) {
                     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "You are using the latest version.");
                 } else {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin is not up to date. Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin is not up to date. Latest version is " + version + ". Please download from https://github.com/yj0524/PoisonousMushroom/releases/latest/download/PoisonousMushroom.jar");
                 }
             } catch (Throwable e) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Update check failed.");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Update check failed. Error Message : " + e.getMessage());
             }
         }
     }
