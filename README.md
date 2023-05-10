@@ -33,6 +33,10 @@
 #### mushroomHealth : 버섯의 체력을 설정합니다.
 #### superMushroomHealth : 슈퍼 버섯의 체력을 설정합니다.
 #### sacrificePercent : 희생 성공 확률을 설정합니다.
+#### infectionPercent : 감염 성공 확률을 설정합니다.
+#### infectionEnable : 감염 기능 활성화 여부를 설정합니다.
+#### gameEndMessageEnable : 게임 종료 히든 메시지 활성화 여부를 설정합니다.
+#### informationEnable : 플러그인 정보 스코어보드 활성화 여부를 설정합니다.
 #### People 팀에 Join 되어있다면, 죽었을 때 Spectator 팀으로 Join 됨과 동시에 게임 모드가 Spectator 모드로 변경됩니다.
 #### 만일 Mushroom 팀에 Join 되어있는 플레이어가 죽었을 때는 아무 일도 일어나지 않고 Mushroom 팀에 Join 되어 있는 사람이 월드의 스폰으로 이동합니다.
 
