@@ -890,11 +890,11 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
 
-    @EventHandler
-    public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            event.setFoodLevel((int) (player.getFoodLevel() * foodLevel));
-        }
-    }
+//    @EventHandler
+//    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+//        if (event.getEntity() instanceof Player) {
+//            Player player = (Player) event.getEntity();
+//            event.setFoodLevel((int) (player.getFoodLevel() * foodLevel));
+//        }
+//    }
 }
