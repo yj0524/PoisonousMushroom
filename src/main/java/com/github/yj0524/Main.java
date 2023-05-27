@@ -346,7 +346,7 @@ public class Main extends JavaPlugin implements Listener {
         mushroomHealth = (float) config.getDouble("mushroomHealth", 20.0f);
         superMushroomHealth = (float) config.getDouble("superMushroomHealth", 40.0f);
         sacrificePercent = (float) config.getDouble("sacrificePercent", 30.0f);
-        infectionPercent = (float) config.getDouble("infectionPercent", 15.0f);
+        infectionPercent = (float) config.getDouble("infectionPercent", 5.0f);
         infectionEnable = config.getBoolean("infectionEnable", true);
         gameEndMessageEnable = config.getBoolean("gameEndMessageEnable", false);
         informationEnable = config.getBoolean("informationEnable", false);
