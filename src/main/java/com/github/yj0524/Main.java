@@ -94,6 +94,8 @@ public class Main extends JavaPlugin implements Listener {
         getCommand("sacrifice").setTabCompleter(new SacrificeTabCom());
         getCommand("getcoordinate").setTabCompleter(new GetCoordinateTabCom());
 
+        loadWorlds();
+
         // Config.yml 파일 생성
         loadConfig();
         File cfile = new File(getDataFolder(), "config.yml");
@@ -101,11 +103,22 @@ public class Main extends JavaPlugin implements Listener {
             getConfig().options().copyDefaults(true);
             saveConfig();
         }
-
         addTeam();
         loadRecipe();
         loadScoreboard();
         setWorldBorder();
+
+        overworld.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
+        overworld.setGameRule(GameRule.FALL_DAMAGE, false);
+        overworld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+
+        nether.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
+        nether.setGameRule(GameRule.FALL_DAMAGE, false);
+        nether.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+
+        end.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
+        end.setGameRule(GameRule.FALL_DAMAGE, false);
+        end.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
 
         new BukkitRunnable() {
             @Override
@@ -177,18 +190,6 @@ public class Main extends JavaPlugin implements Listener {
         }.runTaskTimer(this, 0, 1);
 
         Bukkit.getPluginManager().registerEvents(this, this);
-
-        overworld.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
-        overworld.setGameRule(GameRule.FALL_DAMAGE, false);
-        overworld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-
-        nether.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
-        nether.setGameRule(GameRule.FALL_DAMAGE, false);
-        nether.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-
-        end.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
-        end.setGameRule(GameRule.FALL_DAMAGE, false);
-        end.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     }
 
     @Override
@@ -196,6 +197,39 @@ public class Main extends JavaPlugin implements Listener {
         getLogger().info("Plugin Disabled");
 
         isGameEnd = false;
+
+        configSave();
+    }
+
+    public void configSave() {
+        FileConfiguration config = getConfig();
+        config.set("huskHealth", huskHealth);
+        config.set("huskCount", huskCount);
+        config.set("mushroomPlayerName", mushroomPlayerName);
+        config.set("serverAutoShutDown", serverAutoShutDown);
+        config.set("serverShutDownTick", serverShutDownTick);
+        config.set("mobFollowRange", mobFollowRange);
+        config.set("respawnSpectatorRange", respawnSpectatorRange);
+        config.set("mobSpawn", mobSpawn);
+        config.set("huskTridentPercent", huskTridentPercent);
+        config.set("worldBorderSize", worldBorderSize);
+        config.set("worldBorderEnable", worldBorderEnable);
+        config.set("endGateway", endGateway);
+        config.set("randomSpawn", randomSpawn);
+        config.set("peopleHealth", peopleHealth);
+        config.set("mushroomHealth", mushroomHealth);
+        config.set("superMushroomHealth", superMushroomHealth);
+        config.set("sacrificePercent", sacrificePercent);
+        config.set("infectionPercent", infectionPercent);
+        config.set("infectionEnable", infectionEnable);
+        config.set("gameEndMessageEnable", gameEndMessageEnable);
+        config.set("informationEnable", informationEnable);
+    }
+
+    public void loadWorlds() {
+        overworld = Bukkit.getWorld("world");
+        nether = Bukkit.getWorld("world_nether");
+        end = Bukkit.getWorld("world_the_end");
     }
 
     private void addTeam() {
@@ -257,9 +291,11 @@ public class Main extends JavaPlugin implements Listener {
         respawnsemaphore.setItemMeta(respawnsemaphoreMeta);
         NamespacedKey key2 = new NamespacedKey(this, "respawnsemaphore");
         ShapedRecipe respawnsemaphoreRecipe = new ShapedRecipe(key2, respawnsemaphore);
-        respawnsemaphoreRecipe.shape(" I ", " D ", " G ");
+        respawnsemaphoreRecipe.shape(" I ", "EDC", " G ");
         respawnsemaphoreRecipe.setIngredient('I', Material.IRON_INGOT);
+        respawnsemaphoreRecipe.setIngredient('E', Material.EMERALD);
         respawnsemaphoreRecipe.setIngredient('D', Material.DIAMOND);
+        respawnsemaphoreRecipe.setIngredient('C', Material.COPPER_INGOT);
         respawnsemaphoreRecipe.setIngredient('G', Material.GOLD_INGOT);
         Bukkit.addRecipe(respawnsemaphoreRecipe);
 
@@ -270,16 +306,15 @@ public class Main extends JavaPlugin implements Listener {
         vaccine.setItemMeta(vaccineMeta);
         NamespacedKey key = new NamespacedKey(this, "vaccine");
         ShapedRecipe vaccineRecipe = new ShapedRecipe(key, vaccine);
-        vaccineRecipe.shape("ORD", "ABT", "CNE");
+        vaccineRecipe.shape("ORE", "TBT", "CNE");
         vaccineRecipe.setIngredient('O', Material.BROWN_MUSHROOM);
         vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
-        vaccineRecipe.setIngredient('D', Material.RED_MUSHROOM);
-        vaccineRecipe.setIngredient('A', Material.GOLDEN_APPLE);
-        vaccineRecipe.setIngredient('B', Material.GLASS_BOTTLE);
+        vaccineRecipe.setIngredient('E', Material.RED_MUSHROOM);
         vaccineRecipe.setIngredient('T', Material.TRIDENT);
-        vaccineRecipe.setIngredient('C', Material.COPPER_INGOT);
+        vaccineRecipe.setIngredient('B', Material.GLASS_BOTTLE);
+        vaccineRecipe.setIngredient('A', Material.GOLDEN_APPLE);
         vaccineRecipe.setIngredient('N', Material.NETHERITE_INGOT);
-        vaccineRecipe.setIngredient('E', Material.EMERALD);
+        vaccineRecipe.setIngredient('C', Material.GOLDEN_CARROT);
         Bukkit.addRecipe(vaccineRecipe);
     }
 
@@ -350,30 +385,8 @@ public class Main extends JavaPlugin implements Listener {
         infectionEnable = config.getBoolean("infectionEnable", true);
         gameEndMessageEnable = config.getBoolean("gameEndMessageEnable", false);
         informationEnable = config.getBoolean("informationEnable", false);
-        foodLevel = (float) config.getDouble("foodLevel", 0.5f);
         // Save config
-        config.set("huskHealth", huskHealth);
-        config.set("huskCount", huskCount);
-        config.set("mushroomPlayerName", mushroomPlayerName);
-        config.set("serverAutoShutDown", serverAutoShutDown);
-        config.set("serverShutDownTick", serverShutDownTick);
-        config.set("mobFollowRange", mobFollowRange);
-        config.set("respawnSpectatorRange", respawnSpectatorRange);
-        config.set("mobSpawn", mobSpawn);
-        config.set("huskTridentPercent", huskTridentPercent);
-        config.set("worldBorderSize", worldBorderSize);
-        config.set("worldBorderEnable", worldBorderEnable);
-        config.set("endGateway", endGateway);
-        config.set("randomSpawn", randomSpawn);
-        config.set("peopleHealth", peopleHealth);
-        config.set("mushroomHealth", mushroomHealth);
-        config.set("superMushroomHealth", superMushroomHealth);
-        config.set("sacrificePercent", sacrificePercent);
-        config.set("infectionPercent", infectionPercent);
-        config.set("infectionEnable", infectionEnable);
-        config.set("gameEndMessageEnable", gameEndMessageEnable);
-        config.set("informationEnable", informationEnable);
-        config.set("foodLevel", foodLevel);
+        configSave();
         saveConfig();
     }
 
@@ -651,6 +664,12 @@ public class Main extends JavaPlugin implements Listener {
                     item.setAmount(item.getAmount() - 1);
 
                     int tmpPlayer = peopleTeam.getSize();
+                    int tmpInt = 0;
+                    String tmpPlayerName = "";
+
+                    for (Player allplayers : Bukkit.getOnlinePlayers()) {
+                        allplayers.sendMessage("§a" + player.getName() + " 님이 부활 신호기를 사용했습니다!");
+                    }
 
                     // 사용한 사람 기준 주변 10블록 관전자에게 People 팀으로 Join
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
@@ -659,24 +678,22 @@ public class Main extends JavaPlugin implements Listener {
                                 allplayers.setGameMode(GameMode.SURVIVAL);
                                 spectatorTeam.removeEntry(allplayers.getName());
                                 peopleTeam.addEntry(allplayers.getName());
+                                tmpPlayerName = allplayers.getName();
+                                tmpInt++;
+                            }
+                        }
+                        for (Player allplayers1 : Bukkit.getOnlinePlayers()) {
+                            if (tmpInt != 0) {
+                                allplayers1.sendMessage("§a" + tmpPlayerName + "님이 부활했습니다!");
+                                allplayers1.playSound(allplayers1.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                             }
                         }
                     }
 
                     for (Player allplayers : Bukkit.getOnlinePlayers()) {
-                        allplayers.sendMessage("§a" + player.getName() + " 님이 부활 신호기를 사용했습니다!");
-
                         if (tmpPlayer == peopleTeam.getSize()) {
                             allplayers.sendMessage("§c하지만, 주변에 영혼이 없어서 부활에 실패했습니다!");
                             allplayers.playSound(allplayers.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1, 1);
-                        } else {
-                            String revivedPlayers = "";
-                            for (String revivedPlayer : peopleTeam.getEntries()) {
-                                revivedPlayers += revivedPlayer + ", ";
-                            }
-                            revivedPlayers = revivedPlayers.substring(0, revivedPlayers.length() - 2);
-                            allplayers.sendMessage("§a" + revivedPlayers + " 님이 부활했습니다!");
-                            allplayers.playSound(allplayers.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                         }
                     }
                 }
@@ -889,12 +906,4 @@ public class Main extends JavaPlugin implements Listener {
             }
         }
     }
-
-//    @EventHandler
-//    public void onFoodLevelChange(FoodLevelChangeEvent event) {
-//        if (event.getEntity() instanceof Player) {
-//            Player player = (Player) event.getEntity();
-//            event.setFoodLevel((int) (player.getFoodLevel() * foodLevel));
-//        }
-//    }
 }
