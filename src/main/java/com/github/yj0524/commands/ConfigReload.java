@@ -15,7 +15,7 @@ public class ConfigReload implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        main.loadConfig();
+        main.reloadConfig();
         sender.sendMessage("§aConfig Reloaded!");
         return true;
     }

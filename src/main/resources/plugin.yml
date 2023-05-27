@@ -1,5 +1,5 @@
 name: PoisonousMushroom
-version: '2.0.0'
+version: '2.0.1'
 main: com.github.yj0524.Main
 api-version: 1.19
 commands:
