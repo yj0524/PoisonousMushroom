@@ -1,4 +1,4 @@
-# PoisonousMushroom (Spigot, Paper 1.19.4)
+# PoisonousMushroom (Spigot, Paper 1.20)
 ## 목차
 - [1. 소개](#소개)
 - [2. 플러그인 설명](#플러그인-설명)
@@ -9,7 +9,7 @@
 - [7. Special Thanks](#Special-Thanks)
 
 ## 소개
-- PoisonousMushroom 플러그인입니다. Minecraft Spigot, Paper 버킷 1.19.4 버전에서 사용이 가능합니다.
+- PoisonousMushroom 플러그인입니다. Minecraft Spigot, Paper 버킷 1.20 버전에서 사용이 가능합니다.
 - 주의 : Paper API로 만들어졌으므로, Spigot에서 오류가 발생할 수 있습니다.
 
 ## 플러그인 설명
