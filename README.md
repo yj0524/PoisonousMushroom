@@ -1,4 +1,4 @@
-# PoisonousMushroom (Spigot, Paper 1.20)
+# PoisonousMushroom (Spigot, Paper 1.20.1)
 ## 목차
 - [1. 소개](#소개)
 - [2. 플러그인 설명](#플러그인-설명)
