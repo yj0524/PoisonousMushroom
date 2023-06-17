@@ -11,6 +11,7 @@ import org.bukkit.entity.Husk;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PoisonousMushroom implements CommandExecutor {
 
@@ -25,8 +26,9 @@ public class PoisonousMushroom implements CommandExecutor {
         if (sender instanceof Player) {
             Player allPlayers = (Player) sender;
             Player player = (Player) sender;
+
             if (args.length == 0) {
-                player.sendMessage("§c사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore, forcehuskspawn>");
+                player.sendMessage("§c사용법 : /poisonousmushroom <type>");
             } else if (args[0].equals("gamestart")) {
                 if (player.isOp()) {
                     for (String entry : main.spectatorTeam.getEntries()) {
@@ -152,8 +154,110 @@ public class PoisonousMushroom implements CommandExecutor {
                 } else {
                     player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
                 }
+            } else if (args[0].equals("mushroomappear")) {
+                if (player.isOp()) {
+                    main.isTimerStart = true;
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if (!main.isTimerStart) {
+                                this.cancel();
+                            }
+
+                            for (Player allplayer : Bukkit.getOnlinePlayers()) {
+                                if (main.mushroomAppearSeconds == 0) {
+                                    if (main.mushroomAppearMinutes == 0) {
+                                        allplayer.sendMessage("§c버섯이 출몰합니다!");
+                                        allplayer.playSound(allplayer.getLocation(), Sound.ENTITY_WITHER_DEATH, 0.3f, 1);
+
+                                        for (String entry : main.mushroomTeam.getEntries()) {
+                                            Player player1 = Bukkit.getPlayer(entry);
+                                            player1.setGameMode(GameMode.SURVIVAL);
+                                        }
+
+                                        this.cancel();
+                                    } else {
+                                        main.mushroomAppearMinutes--;
+                                        main.mushroomAppearSeconds = 59;
+                                        main.configSave();
+                                        main.saveConfig();
+                                    }
+                                } else {
+                                    main.mushroomAppearSeconds--;
+                                    main.configSave();
+                                    main.saveConfig();
+                                }
+
+                                if (allplayer != null) {
+                                    if (main.mushroomAppearMinutes == 0 && main.mushroomAppearSeconds == 0) {
+                                        allplayer.sendActionBar("§c버섯이 출몰합니다!");
+                                    } else if (main.mushroomAppearSeconds >= 0 && main.mushroomAppearSeconds <= 9 && main.mushroomAppearMinutes >= 0 && main.mushroomAppearMinutes <= 9) {
+                                        allplayer.sendActionBar("§c0" + main.mushroomAppearMinutes + " : 0" + main.mushroomAppearSeconds + " 후에 버섯이 출몰합니다!");
+                                    } else if (main.mushroomAppearSeconds >= 0 && main.mushroomAppearSeconds <= 9) {
+                                        allplayer.sendActionBar("§c" + main.mushroomAppearMinutes + " : 0" + main.mushroomAppearSeconds + " 후에 버섯이 출몰합니다!");
+                                    } else if (main.mushroomAppearMinutes >= 0 && main.mushroomAppearMinutes <= 9) {
+                                        allplayer.sendActionBar("§c0" + main.mushroomAppearMinutes + " : " + main.mushroomAppearSeconds + " 후에 버섯이 출몰합니다!");
+                                    } else if (main.mushroomAppearMinutes > 0 && main.mushroomAppearSeconds > 0) {
+                                        allplayer.sendActionBar("§c" + main.mushroomAppearMinutes + " : " + main.mushroomAppearSeconds + " 후에 버섯이 출몰합니다!");
+                                    }
+                                }
+                            }
+                        }
+                    }.runTaskTimer(main, 0, 20);
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("timerstop")) {
+                if (player.isOp()) {
+                    if (!main.isTimerStart) {
+                        player.sendMessage("§c타이머가 이미 멈춰있습니다.");
+                    } else {
+                        main.isTimerStart = false;
+                        player.sendMessage("§a타이머를 멈췄습니다.");
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("timerreset")) {
+                if (player.isOp()) {
+                    main.mushroomAppearMinutes = 30;
+                    main.mushroomAppearSeconds = 0;
+                    main.configSave();
+                    main.saveConfig();
+                    player.sendMessage("§a타이머를 초기화했습니다.");
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("timerset")) {
+                if (player.isOp()) {
+                    if (args.length == 3) {
+                        main.mushroomAppearMinutes = Integer.parseInt(args[1]);
+                        main.mushroomAppearSeconds = Integer.parseInt(args[2]);
+                        main.configSave();
+                        main.saveConfig();
+                        player.sendMessage("§a타이머를 설정했습니다.");
+                    } else if (args.length == 2) {
+                        player.sendMessage("§c사용법 : /poisonousmushroom timerset <minutes> <seconds>");
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
+            } else if (args[0].equals("timerget")) {
+                if (player.isOp()) {
+                    if (main.mushroomAppearSeconds >= 0 && main.mushroomAppearSeconds <= 9 && main.mushroomAppearMinutes >= 0 && main.mushroomAppearMinutes <= 9) {
+                        player.sendActionBar("§a현재 버섯 출몰까지 남은 시간 : 0" + main.mushroomAppearMinutes + "분 0" + main.mushroomAppearSeconds + "초");
+                    } else if (main.mushroomAppearSeconds >= 0 && main.mushroomAppearSeconds <= 9) {
+                        player.sendActionBar("§a현재 버섯 출몰까지 남은 시간 : " + main.mushroomAppearMinutes + "분 0" + main.mushroomAppearSeconds + "초");
+                    } else if (main.mushroomAppearMinutes >= 0 && main.mushroomAppearMinutes <= 9) {
+                        player.sendActionBar("§a현재 버섯 출몰까지 남은 시간 : 0" + main.mushroomAppearMinutes + "분 " + main.mushroomAppearSeconds + "초");
+                    } else if (main.mushroomAppearMinutes > 0 && main.mushroomAppearSeconds > 0) {
+                        player.sendActionBar("§a현재 버섯 출몰까지 남은 시간 : " + main.mushroomAppearMinutes + "분 " + main.mushroomAppearSeconds + "초");
+                    }
+                } else {
+                    player.sendMessage("§c당신은 이 명령어를 사용할 권한이 없습니다.");
+                }
             } else if (args[0].equals("help")) {
-                player.sendMessage("§a사용법 : /poisonousmushroom <gameend, vaccine, respawnsemaphore, forcehuskspawn> [PlayerName (vaccine, respawnsemaphore command only)]");
+                player.sendMessage("§a사용법 : /poisonousmushroom <type>");
             }
         }
         return true;

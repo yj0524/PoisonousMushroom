@@ -43,6 +43,7 @@ public class Main extends JavaPlugin implements Listener {
     public Team peopleTeam;
 
     public boolean isGameEnd = false;
+    public boolean isTimerStart = false;
     public final float[] damageMultipliers = { 1.2f, 1.4f, 1.6f, 1.8f, 2.0f };
     public String version = getDescription().getVersion();
 
@@ -69,6 +70,8 @@ public class Main extends JavaPlugin implements Listener {
     public boolean gameEndMessageEnable;
     public boolean informationEnable;
     public float foodLevel;
+    public int mushroomAppearMinutes;
+    public int mushroomAppearSeconds;
 
     @Override
     public void onEnable() {
@@ -107,6 +110,11 @@ public class Main extends JavaPlugin implements Listener {
         loadRecipe();
         loadScoreboard();
         setWorldBorder();
+
+        if (mushroomAppearMinutes == 0 && mushroomAppearSeconds == 0) {
+            mushroomAppearMinutes = 30;
+            mushroomAppearSeconds = 0;
+        }
 
         overworld.setGameRule(GameRule.DO_MOB_SPAWNING, mobSpawn);
         overworld.setGameRule(GameRule.FALL_DAMAGE, false);
@@ -224,6 +232,8 @@ public class Main extends JavaPlugin implements Listener {
         config.set("infectionEnable", infectionEnable);
         config.set("gameEndMessageEnable", gameEndMessageEnable);
         config.set("informationEnable", informationEnable);
+        config.set("mushroomAppearMinutes", mushroomAppearMinutes);
+        config.set("mushroomAppearSeconds", mushroomAppearSeconds);
     }
 
     public void loadWorlds() {
@@ -306,7 +316,7 @@ public class Main extends JavaPlugin implements Listener {
         vaccine.setItemMeta(vaccineMeta);
         NamespacedKey key = new NamespacedKey(this, "vaccine");
         ShapedRecipe vaccineRecipe = new ShapedRecipe(key, vaccine);
-        vaccineRecipe.shape("ORE", "TBT", "CNE");
+        vaccineRecipe.shape("ORE", "TBT", "ANC");
         vaccineRecipe.setIngredient('O', Material.BROWN_MUSHROOM);
         vaccineRecipe.setIngredient('R', new ItemStack(respawnsemaphore));
         vaccineRecipe.setIngredient('E', Material.RED_MUSHROOM);
@@ -385,6 +395,8 @@ public class Main extends JavaPlugin implements Listener {
         infectionEnable = config.getBoolean("infectionEnable", true);
         gameEndMessageEnable = config.getBoolean("gameEndMessageEnable", false);
         informationEnable = config.getBoolean("informationEnable", false);
+        mushroomAppearMinutes = config.getInt("mushroomAppearMinutes", 30);
+        mushroomAppearSeconds = config.getInt("mushroomAppearSeconds", 0);
         // Save config
         configSave();
         saveConfig();

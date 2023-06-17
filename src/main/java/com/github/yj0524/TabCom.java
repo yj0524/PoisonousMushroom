@@ -20,6 +20,11 @@ public class TabCom implements TabCompleter {
             arguments.add("vaccine");
             arguments.add("respawnsemaphore");
             arguments.add("forcehuskspawn");
+            arguments.add("mushroomappear");
+            arguments.add("timerstop");
+            arguments.add("timerreset");
+            arguments.add("timerset");
+            arguments.add("timerget");
         }
 
         List<String> result = new ArrayList<>();
@@ -69,6 +74,36 @@ public class TabCom implements TabCompleter {
 
         // forcehuskspawn Command
         if (arg[0].equalsIgnoreCase("forcehuskspawn")) {
+            result.clear();
+            return result;
+        }
+
+        // mushroomappear Command
+        if (arg[0].equalsIgnoreCase("mushroomappear")) {
+            result.clear();
+            return result;
+        }
+
+        // timerstop Command
+        if (arg[0].equalsIgnoreCase("timerstop")) {
+            result.clear();
+            return result;
+        }
+
+        // timerreset Command
+        if (arg[0].equalsIgnoreCase("timerreset")) {
+            result.clear();
+            return result;
+        }
+
+        // timerset Command
+        if (arg[0].equalsIgnoreCase("timerset")) {
+            result.clear();
+            return result;
+        }
+
+        // timerget Command
+        if (arg[0].equalsIgnoreCase("timerget")) {
             result.clear();
             return result;
         }
