@@ -36,6 +36,8 @@
 - infectionEnable : 감염 기능 활성화 여부를 설정합니다.
 - gameEndMessageEnable : 게임 종료 히든 메시지 활성화 여부를 설정합니다.
 - informationEnable : 플러그인 정보 스코어보드 활성화 여부를 설정합니다.
+- mushroomAppearMinutes : 버섯이 나타나는 분을 설정합니다.
+- mushroomAppearSeconds : 버섯이 나타나는 초를 설정합니다.
 - People 팀에 Join 되어있다면, 죽었을 때 Spectator 팀으로 Join 됨과 동시에 게임 모드가 Spectator 모드로 변경됩니다.
 - 만일 Mushroom 팀에 Join 되어있는 플레이어가 죽었을 때는 아무 일도 일어나지 않고 Mushroom 팀에 Join 되어 있는 사람이 월드의 스폰으로 이동합니다.
 
