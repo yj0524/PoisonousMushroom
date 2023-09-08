@@ -63,7 +63,7 @@
 - 오류 제보는 [GitHub Issues](https://github.com/yj0524/PoisonousMushroom/issues)에 제보해주시고, 코드 수정 요청은 [GitHub Pull Request](https://github.com/yj0524/PoisonousMushroom/pulls)에 요청해주시기 바랍니다.
 
 ## 추가 사이트
-- [포자 : 최후의 생존자들 - 컨텐츠 룰](https://poisonousmushroomrule.mushtle.co.kr)
+- [포자 : 최후의 생존자들 - 컨텐츠 룰](https://poisonousmushroomrule.mushtle.co.kr) (폐쇄)
 
 ## Contact Email
 - admin@mushtle.co.kr
